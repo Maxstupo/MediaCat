@@ -1,4 +1,4 @@
-﻿namespace MediaCat.Gui.Utility {
+﻿namespace MediaCat.Utility {
     using NLog;
     using System;
 

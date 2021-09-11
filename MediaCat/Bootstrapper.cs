@@ -1,9 +1,9 @@
-﻿namespace MediaCat.Gui {
+﻿namespace MediaCat {
     using System;
     using System.Diagnostics;
     using System.Windows.Threading;
-    using MediaCat.Gui.Utility;
-    using MediaCat.Gui.ViewModels.Windows;
+    using MediaCat.Utility;
+    using MediaCat.ViewModels.Windows;
     using Stylet;
     using StyletIoC;
 

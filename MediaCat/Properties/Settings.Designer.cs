@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MediaCat.Gui.Properties {
+namespace MediaCat.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
