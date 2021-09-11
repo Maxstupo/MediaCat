@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaCat.Gui", "MediaCat.App\MediaCat.Gui.csproj", "{90FC8CDB-ED38-4F4E-82BD-C70041DA9CC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{788D8406-DC90-4208-ACC5-B987A13BFFDC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90FC8CDB-ED38-4F4E-82BD-C70041DA9CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90FC8CDB-ED38-4F4E-82BD-C70041DA9CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90FC8CDB-ED38-4F4E-82BD-C70041DA9CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90FC8CDB-ED38-4F4E-82BD-C70041DA9CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C9B5FDB0-2FC5-4C04-B245-F387322ED59F}
+	EndGlobalSection
+EndGlobal
