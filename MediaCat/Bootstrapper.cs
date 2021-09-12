@@ -1,7 +1,11 @@
 ﻿namespace MediaCat {
     using System;
     using System.Diagnostics;
+    using System.IO.Abstractions;
     using System.Windows.Threading;
+    using MediaCat.Core.Services.Localization;
+    using MediaCat.Core.Services.Localization.Providers;
+    using MediaCat.Core.Services.Localization.Readers;
     using MediaCat.Utility;
     using MediaCat.ViewModels.Windows;
     using Stylet;
@@ -30,6 +34,37 @@
             Logger.Trace("ConfigureIoC()");
 
             builder.Bind<IViewManager>().To<MappingViewManager>();
+
+            // bind i18n
+            builder.Bind<II18N>().To<I18N>().InSingletonScope();
+
+            // bind file system
+            IFileSystem fileSystem = new FileSystem();
+            builder.Bind<IFileSystem>().ToInstance(fileSystem);
+            builder.Bind<IDirectory>().ToInstance(fileSystem.Directory);
+            builder.Bind<IFile>().ToInstance(fileSystem.File);
+            builder.Bind<IPath>().ToInstance(fileSystem.Path);
+
+
+        }
+
+        protected override void Configure() {
+            Logger.Trace("Configure()");
+
+            IFileSystem fileSystem = Container.Get<IFileSystem>();
+
+
+            // init i18n
+            II18N i18n = Container.Get<II18N>();
+
+            FileSystemProvider provider = new FileSystemProvider(fileSystem, "default");
+            provider.AddDirectory("locales");
+            i18n.RegisterProvider(provider);
+
+            i18n.RegisterReader(new JsonTreeReader(), ".json");
+            i18n.RegisterReader(new JsonKvpReader(), ".jkvp");
+
+            i18n.Init();
         }
 
 

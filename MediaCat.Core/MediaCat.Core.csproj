@@ -43,10 +43,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Localization\II18N.cs" />
+    <Compile Include="Services\Localization\ILocaleProvider.cs" />
+    <Compile Include="Services\Localization\ILocaleReader.cs" />
+    <Compile Include="Services\Localization\I18N.cs" />
+    <Compile Include="Services\Localization\Providers\FileSystemProvider.cs" />
+    <Compile Include="Services\Localization\Readers\JsonKvpReader.cs" />
+    <Compile Include="Services\Localization\Readers\JsonTreeReader.cs" />
+    <Compile Include="Services\Localization\LocaleFormat.cs" />
+    <Compile Include="Services\Localization\Language.cs" />
+    <Compile Include="Utility\Extensions\StringExtensions.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Localization\" />
-    <Folder Include="Utility\" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.7.11</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>13.2.47</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

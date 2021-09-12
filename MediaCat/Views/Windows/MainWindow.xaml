@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmw:MainWindowViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterScreen"
-        Title="{Binding DisplayName}" Height="740" Width="1200">
+        Title="{Binding I18N[main.title]}" Height="740" Width="1200">
     <Grid>
         
     </Grid>
