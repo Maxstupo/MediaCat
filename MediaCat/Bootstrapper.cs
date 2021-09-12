@@ -6,6 +6,7 @@
     using MediaCat.Core.Services.Localization;
     using MediaCat.Core.Services.Localization.Providers;
     using MediaCat.Core.Services.Localization.Readers;
+    using MediaCat.Services;
     using MediaCat.Utility;
     using MediaCat.ViewModels.Windows;
     using Stylet;
@@ -35,6 +36,8 @@
 
             builder.Bind<IViewManager>().To<MappingViewManager>();
 
+            builder.Bind<IFileFolderDialog>().To<NativeFileFolderDialog>().InSingletonScope();
+
             // bind i18n
             builder.Bind<II18N>().To<I18N>().InSingletonScope();
 
@@ -44,7 +47,6 @@
             builder.Bind<IDirectory>().ToInstance(fileSystem.Directory);
             builder.Bind<IFile>().ToInstance(fileSystem.File);
             builder.Bind<IPath>().ToInstance(fileSystem.Path);
-
 
         }
 

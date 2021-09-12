@@ -5,11 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaCat.Views.Windows"
         xmlns:vmw="clr-namespace:MediaCat.ViewModels.Windows"
+        xmlns:s="https://github.com/canton7/Stylet"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmw:MainWindowViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterScreen"
         Title="{Binding I18N[main.title]}" Height="740" Width="1200">
     <Grid>
-        
+        <StackPanel>
+            <Button Command="{s:Action ShowSaveFileDialog}">Click me</Button>
+        </StackPanel>
     </Grid>
 </Window>

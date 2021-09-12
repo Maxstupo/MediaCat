@@ -57,6 +57,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Services\I18NMock.cs" />
+    <Compile Include="Services\IFileFolderDialog.cs" />
+    <Compile Include="Services\NativeFileFolderDialog.cs" />
     <Compile Include="Utility\MappingViewManager.cs" />
     <Compile Include="Utility\NLogLogger.cs" />
     <Compile Include="ViewModels\Windows\MainWindowViewModel.cs" />
@@ -115,6 +117,12 @@
     </PackageReference>
     <PackageReference Include="System.IO.Abstractions">
       <Version>13.2.47</Version>
+    </PackageReference>
+    <PackageReference Include="WindowsAPICodePack-Core">
+      <Version>1.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="WindowsAPICodePack-Shell">
+      <Version>1.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
