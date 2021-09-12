@@ -37,7 +37,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - './appveyor-build.bat'
+  - ps: ./appveyor-build.ps1
 
 test: off
 deploy: off
