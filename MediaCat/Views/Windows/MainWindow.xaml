@@ -9,10 +9,45 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmw:MainWindowViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterScreen"
-        Title="{Binding I18N[main.title]}" Height="740" Width="1200">
+        Title="{Binding I18N[windows.main.title]}" Height="740" Width="1200">
     <Grid>
-        <StackPanel>
-            <Button Command="{s:Action ShowSaveFileDialog}">Click me</Button>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--Menustrip-->
+        <Menu Grid.Row="0">
+            <MenuItem Header="{Binding I18N[windows.main.menu.file]}">
+                <MenuItem Header="{Binding I18N[windows.main.menu.file.new]}" InputGestureText="Ctrl+N" Command="{s:Action ShowNewCatalogDialog}"/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.file.open]}" InputGestureText="Ctrl+O" Command="{s:Action ShowOpenCatalogDialog}"/>
+                <Separator/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.file.exit]}" Command="{s:Action RequestClose}"/>
+            </MenuItem>
+            <MenuItem Header="{Binding I18N[windows.main.menu.pages]}">
+                <MenuItem Header="{Binding I18N[windows.main.menu.pages.new_search_tab]}" InputGestureText="Ctrl+Q" Command="{s:Action NewSearchTab}"/>
+            </MenuItem>
+            <MenuItem Header="{Binding I18N[windows.main.menu.catalog]}">
+                <MenuItem Header="{Binding I18N[windows.main.menu.catalog.import_files]}" InputGestureText="Ctrl+I" Command="{s:Action ShowImportFilesDialog}"/>
+                <Separator/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.catalog.storage_locations]}" InputGestureText="Ctrl+L" Command="{s:Action ShowStorageLocationsDialog}"/>
+            </MenuItem>
+        </Menu>
+
+        <TabControl Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding ActiveItem}" DisplayMemberPath="DisplayName">
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+
+        </TabControl>
+
+        <!--Statusbar-->
+        <StatusBar Grid.Row="2">
+            <TextBlock Text="0 file(s) - 0.0 MB"/>
+        </StatusBar>
+
     </Grid>
 </Window>

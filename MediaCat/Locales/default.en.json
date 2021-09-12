@@ -1,5 +1,25 @@
 ﻿{
-  "main": {
-    "title": "MediaCat"
+  "windows": {
+    "main": {
+      "title": "MediaCat",
+      "menu": {
+        "file": {
+          "$val": "File",
+          "new": "New Catalog...",
+          "open": "Open Catalog...",
+          "exit": "Exit"
+        },
+        "pages": {
+          "$val": "Pages",
+          "new_search_tab": "New Search Tab"
+        },
+        "catalog": {
+          "$val": "Catalog",
+          "import_files": "Import Files...",
+          "storage_locations": "Storage Locations..."
+        }
+      }
+    }
   }
+
 }
