@@ -4,6 +4,10 @@ environment:
   APPVEYOR_TOKEN:
     secure: EnZNz248FTxQXX+pCmZL7Ds5vFWwk8gkJASFBaQSos0=
 
+branches:
+  only:
+    - master
+
 skip_commits:
   files:
     - README.md
@@ -12,9 +16,12 @@ configuration:
   - Debug
   - Release
   
+cache:
+  - '%USERPROFILE%\.nuget\packages -> **.sln, **.csproj'  # preserve nuget folder (packages) unless the solution or projects change
+    
 assembly_info:
   patch: true
-  file: 'MediaCat\**\AssemblyInfo.*'
+  file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
@@ -29,5 +36,14 @@ build:
   project: 'MediaCat.sln'
   verbosity: minimal
 
+after_build:
+  - './appveyor-build.bat'
+
 test: off
 deploy: off
+
+artifacts:
+  - path: 'MediaCat-Portable_v*.zip'
+    name: $(CONFIGURATION)-Portable
+  - path: 'MediaCat-Setup_v*.exe'
+    name: $(CONFIGURATION)-Setup

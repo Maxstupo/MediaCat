@@ -38,3 +38,5 @@ if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
 }
 
 Update-AppveyorBuild -Version "$env:BUILD_VERSION.$BUILD_NUMBER"
+
+$env:BUILD_VERSION = $env:BUILD_VERSION.split(".", 3)
