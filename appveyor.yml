@@ -57,5 +57,4 @@ deploy:
   artifact: /.*\.(exe|zip)/
   draft: true
   on:
-    branch: master
     APPVEYOR_REPO_TAG: true
