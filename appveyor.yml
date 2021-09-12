@@ -1,0 +1,32 @@
+version: 0.1.0.{build}
+
+
+#################################################################
+
+image: Visual Studio 2019
+
+skip_tags: true
+skip_commits:
+  files:
+    - README.md
+    
+configuration:
+  - Debug
+  - Release
+  
+assembly_info:
+  patch: true
+  file: 'MediaCat\**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
+before_build:
+  - nuget restore
+
+build:
+  project: 'MediaCat.sln'
+  verbosity: minimal
+
+test: off
+deploy: off
