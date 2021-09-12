@@ -1,11 +1,9 @@
-version: 0.1.0.{build}
-
-
-#################################################################
-
 image: Visual Studio 2019
 
-skip_tags: true
+environment:
+  APPVEYOR_TOKEN:
+    secure: EnZNz248FTxQXX+pCmZL7Ds5vFWwk8gkJASFBaQSos0=
+
 skip_commits:
   files:
     - README.md
@@ -20,6 +18,9 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+
+install:
+- ps: ./update-version.ps1
 
 before_build:
   - nuget restore
