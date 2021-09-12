@@ -40,10 +40,21 @@ after_build:
   - ps: ./appveyor-build.ps1
 
 test: off
-deploy: off
 
 artifacts:
   - path: 'MediaCat-Portable_v*.zip'
     name: $(CONFIGURATION)-Portable
   - path: 'MediaCat-Setup_v*.exe'
     name: $(CONFIGURATION)-Setup
+
+deploy:
+  release: MediaCat v$(BUILD_VERSION)
+  tag: v$(BUILD_VERSION)
+  provider: GitHub
+  auth_token:
+    secure: 2hE9Yq+4IOdsHm80lpYkQGR/uutZjdQUx79wU7oVbPLIBbJuGmgczTWq++mdCBa8
+  artifact: /.*\.(exe|zip)/
+  draft: true
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
