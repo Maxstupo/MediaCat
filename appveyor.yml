@@ -54,7 +54,8 @@ deploy:
   provider: GitHub
   auth_token:
     secure: 2hE9Yq+4IOdsHm80lpYkQGR/uutZjdQUx79wU7oVbPLIBbJuGmgczTWq++mdCBa8
-  artifact: /.*v\d+\.\d+\.\d+\.(exe|zip)/
+  artifact: /.*\.(exe|zip)/
   draft: true
   on:
+    configuration: Release
     APPVEYOR_REPO_TAG: true
