@@ -11,6 +11,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmd:StorageDialogViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
         Title="{Binding I18N[dialogs.storage.title]}" Height="400" Width="650">
     <Grid>
         <Grid.RowDefinitions>
