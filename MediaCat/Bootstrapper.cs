@@ -3,6 +3,8 @@
     using System.Diagnostics;
     using System.IO.Abstractions;
     using System.Windows.Threading;
+    using MediaCat.Core.Services.Catalog;
+    using MediaCat.Core.Services.Catalog.Database;
     using MediaCat.Core.Services.Localization;
     using MediaCat.Core.Services.Localization.Providers;
     using MediaCat.Core.Services.Localization.Readers;
@@ -29,6 +31,8 @@
             } else {
                 Logger.Warn("Skipping crash logging initialization! Debugger is attached!");
             }
+
+            SQLitePCL.Batteries.Init();
         }
 
         protected override void ConfigureIoC(IStyletIoCBuilder builder) {
@@ -48,13 +52,20 @@
             builder.Bind<IFile>().ToInstance(fileSystem.File);
             builder.Bind<IPath>().ToInstance(fileSystem.Path);
 
+            // bind catalog system
+            ICatalog catalog = new SQLiteDatabaseCatalog(fileSystem);
+            builder.Bind<ICatalog>().ToInstance(catalog);
+            builder.Bind<IDatabase>().ToInstance(catalog);
+
         }
 
         protected override void Configure() {
             Logger.Trace("Configure()");
 
             IFileSystem fileSystem = Container.Get<IFileSystem>();
-
+            IDatabase db = Container.Get<IDatabase>();
+         
+            db.CreateAsync("./test.sqlite3").Wait();
 
             // init i18n
             II18N i18n = Container.Get<II18N>();

@@ -46,5 +46,11 @@
         "used_space": "Used Space"
       }
     }
+  },
+  "tabs": {
+    "search": {
+      "search": "Search",
+      "selection_tags": "Selection Tags"
+    }
   }
 }
