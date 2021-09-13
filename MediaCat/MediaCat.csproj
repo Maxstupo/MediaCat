@@ -144,6 +144,10 @@
       <Project>{3ab8e948-2432-422e-89fd-932ddd974205}</Project>
       <Name>MediaCat.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MediaCat.Styles\MediaCat.Styles.csproj">
+      <Project>{4d8307cc-223c-4bbc-a917-3d12d248014b}</Project>
+      <Name>MediaCat.Styles</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

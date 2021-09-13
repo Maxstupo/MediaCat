@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:MediaCat"
              xmlns:s="https://github.com/canton7/Stylet">
     <Application.Resources>
-        
+
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
@@ -14,8 +14,10 @@
                     </s:ApplicationLoader.Bootstrapper>
                 </s:ApplicationLoader>
 
+                <ResourceDictionary Source="pack://application:,,,/MediaCat.Styles;component/Styles.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        
+
     </Application.Resources>
 </Application>
