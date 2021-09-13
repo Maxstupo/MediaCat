@@ -20,6 +20,31 @@
         }
       }
     }
+  },
+  "dialogs": {
+    "storage": {
+      "title": "Storage Locations",
+      "description": "Storage locations allows you to store cataloged files on multiple drives.",
+      "actions": {
+        "refresh": { "tooltip": "Refresh available stores" },
+        "add": { "tooltip": "Add a new store" },
+        "move": {
+          "$val": "Move stores",
+          "tooltip": "Move stores"
+        },
+        "merge": { "tooltip": "Merge stores" },
+        "remove": {
+          "$val": "Remove store",
+          "tooltip": "Remove store"
+        }
+      },
+      "columns": {
+        "label": "Label",
+        "path": "Path",
+        "default": "Is Default?",
+        "total_files": "Total File(s)",
+        "used_space": "Used Space"
+      }
+    }
   }
-
 }

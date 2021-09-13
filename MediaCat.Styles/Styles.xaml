@@ -3,11 +3,14 @@
 
     <ResourceDictionary.MergedDictionaries>
 
+        <ResourceDictionary Source="Styles/Button.xaml"/>
         <ResourceDictionary Source="Styles/Menu.xaml"/>
-
+        <ResourceDictionary Source="Styles/DataGrid.xaml"/>
+        
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Default Styles -->
+    <Style TargetType="DataGrid" BasedOn="{StaticResource PrimaryDataGridStyle}"/>
     <Style TargetType="Menu" BasedOn="{StaticResource PrimaryMenuStyle}"/>
 
 </ResourceDictionary>

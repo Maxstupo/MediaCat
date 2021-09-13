@@ -2,6 +2,7 @@
     using System;
     using MediaCat.Core.Services.Localization;
     using MediaCat.Services;
+    using MediaCat.ViewModels.Dialogs;
     using MediaCat.ViewModels.Tabs;
     using Stylet;
 
@@ -10,11 +11,16 @@
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly IFileFolderDialog fileFolderDialog;
-
+        private readonly IWindowManager windowManager;
+        private readonly StorageDialogViewModel storageDialogViewModel;
         private readonly Func<SearchTabViewModel> searchTabViewModelFactory;
 
-        public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, Func<SearchTabViewModel> searchTabViewModelFactory) : base(i18n) {
+        public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager, 
+            StorageDialogViewModel storageDialogViewModel,
+            Func<SearchTabViewModel> searchTabViewModelFactory) : base(i18n) {
             this.fileFolderDialog = fileFolderDialog;
+            this.windowManager = windowManager;
+            this.storageDialogViewModel = storageDialogViewModel;
             this.searchTabViewModelFactory = searchTabViewModelFactory;
         }
 
@@ -32,6 +38,15 @@
             Logger.Debug("Creating Tab: {vm}", vm);
 
             ActivateItem(vm);
+        }
+
+        public void ShowNewCatalogDialog() { }
+        public void ShowOpenCatalogDialog() { }
+
+        public void ShowImportFilesDialog() { }
+
+        public void ShowStorageLocationsDialog() { 
+            windowManager.ShowDialog(storageDialogViewModel, this);
         }
 
     }

@@ -1,0 +1,57 @@
+﻿<Window x:Class="MediaCat.Views.Dialogs.StorageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCat.Views.Dialogs"
+        xmlns:vmd ="clr-namespace:MediaCat.ViewModels.Dialogs"
+        xmlns:util="clr-namespace:MediaCat.Utility"
+        xmlns:s="https://github.com/canton7/Stylet"        
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vmd:StorageDialogViewModel, IsDesignTimeCreatable=True}"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding I18N[dialogs.storage.title]}" Height="400" Width="650">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Margin="4 12 4 8" Grid.Row="0" Text="{Binding I18N[dialogs.storage.description]}"/>
+
+
+        <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" ItemsSource="{Binding Items}"
+            CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" HeadersVisibility="Column" IsReadOnly="True">
+            <DataGrid.Resources>
+                <util:BindingProxy x:Key="proxy" Data="{Binding}"/>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.label], Source={StaticResource proxy}}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.path], Source={StaticResource proxy}}" Width="*"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.default], Source={StaticResource proxy}}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.total_files], Source={StaticResource proxy}}" />
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.used_space], Source={StaticResource proxy}}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Loading indicator. -->
+        <Button Grid.Row="2" Style="{StaticResource IconButton}" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="{Binding I18N[dialogs.storage.actions.refresh.tooltip]}">
+            <iconPacks:PackIconMaterial Kind="Refresh" Spin="False" />
+        </Button>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderPlusOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.add.tooltip]}" Command="{s:Action AddStore}"/>
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderMoveOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.move.tooltip]}" Command="{s:Action MoveStore}"/>
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=CallMerge, RotationAngle=180}" ToolTip="{Binding I18N[dialogs.storage.actions.merge.tooltip]}" Command="{s:Action MergeStore}"/>
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderRemoveOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.remove.tooltip]}" Command="{s:Action DeleteStore}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Margin="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="75" Content="{Binding I18N[close]}" IsDefault="True" IsCancel="True"  Command="{s:Action Cancel}"/>
+        </StackPanel>
+    </Grid>
+</Window>

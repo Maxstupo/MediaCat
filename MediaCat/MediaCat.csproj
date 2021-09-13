@@ -59,6 +59,7 @@
     <Compile Include="Services\I18NMock.cs" />
     <Compile Include="Services\IFileFolderDialog.cs" />
     <Compile Include="Services\NativeFileFolderDialog.cs" />
+    <Compile Include="Utility\BindingProxy.cs" />
     <Compile Include="Utility\MappingViewManager.cs" />
     <Compile Include="Utility\NLogLogger.cs" />
     <Compile Include="ViewModels\ICanRefreshData.cs" />
@@ -66,9 +67,7 @@
     <Compile Include="ViewModels\Tabs\ITabPage.cs" />
     <Compile Include="ViewModels\Tabs\SearchTabViewModel.cs" />
     <Compile Include="ViewModels\Windows\MainWindowViewModel.cs" />
-    <Compile Include="Views\Tabs\SearchTabView.xaml.cs">
-      <DependentUpon>SearchTabView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModels\Dialogs\StorageDialogViewModel.cs" />
     <Page Include="Views\Tabs\SearchTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -78,6 +77,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Bootstrapper.cs" />
+    <Page Include="Views\Dialogs\StorageDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -116,6 +119,9 @@
       <Version>6.5.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro.IconPacks.Material">
+      <Version>4.8.0</Version>
     </PackageReference>
     <PackageReference Include="NLog">
       <Version>4.7.11</Version>
