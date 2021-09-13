@@ -8,8 +8,74 @@
              mc:Ignorable="d" 
              xmlns:vmt="clr-namespace:MediaCat.ViewModels.Tabs"
              d:DataContext="{d:DesignInstance vmt:SearchTabViewModel, IsDesignTimeCreatable=True}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="750" d:DesignWidth="1200">
     <Grid>
-        <TextBlock Text="{Binding DisplayName}"/>
+        <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="3"/>
+        <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Search-->
+        <ScrollViewer  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid Grid.Row="0" Background="WhiteSmoke">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="152" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="4"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" MinHeight="190"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="2" HorizontalAlignment="Center" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding I18N[tabs.search.search]}"/>
+
+                <!--Search Terms-->
+                <ListBox Grid.Row="1"/>
+
+                <!-- Search Term Input Box -->
+                <TextBox Grid.Row="2" Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Row="4" Margin="2" HorizontalAlignment="Center" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding I18N[tabs.search.selection_tags]}"/>
+
+                <!--Selection Tag Sorting-->
+                <ComboBox Grid.Row="5" Margin="2" VerticalAlignment="Center">
+               
+                </ComboBox>
+
+                <!-- Selection Tags -->
+                <ListBox Grid.Row="6"/>
+
+
+            </Grid>
+        </ScrollViewer>
+
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  ResizeDirection="Rows" />
+
+        <!--Thumbnail Preview-->
+        <Grid Grid.Row="2" Background="WhiteSmoke">
+            <Image MaxWidth="500"/>
+        </Grid>
+
+    </Grid>
+
+    <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+
+    <!--Search Results-->
+    <ListBox Grid.Column="2" Margin="0 2 0 0">
+
+    </ListBox>
+
     </Grid>
 </UserControl>
