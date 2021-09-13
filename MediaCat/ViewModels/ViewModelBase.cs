@@ -16,28 +16,32 @@
         public ConductorOneActive() {
             if (!Execute.InDesignMode)
                 throw new Exception("Designer constructor!");
-            I18N = new I18NMock("../Locales/default.en.json");
+            I18N = new I18NMock(ViewModelBase.DesignerLocaleFilepath);
         }
 
     }
 
-    public abstract class ScreenBase : Screen {
+    /// <summary>
+    /// The base view model used primarily by tab and dialog view models. Supports ICanRefreshData interface, will be called when the view is opened.
+    /// </summary>
+    public abstract class ViewModelBase : Screen {
+        public static readonly string DesignerLocaleFilepath = "../Locales/default.en.json";
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public II18N I18N { get; }
 
-
         private bool allowDeactivated = true;
 
-        public ScreenBase(II18N i18N) {
+        public ViewModelBase(II18N i18N) {
             this.I18N = i18N;
         }
 
         // Dummy designer ctor
-        public ScreenBase() {
+        public ViewModelBase() {
             if (!Execute.InDesignMode)
                 throw new Exception("Designer constructor!");
-            I18N = new I18NMock("../Locales/default.en.json");
+            I18N = new I18NMock(DesignerLocaleFilepath);
         }
 
         public virtual async void OnOpen() {

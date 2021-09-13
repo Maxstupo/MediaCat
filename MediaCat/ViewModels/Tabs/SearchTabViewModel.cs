@@ -2,7 +2,7 @@
     using System;
     using MediaCat.Core.Services.Localization;
 
-    public sealed class SearchTabViewModel : ScreenBase, ITabPage {
+    public sealed class SearchTabViewModel : ViewModelBase, ITabPage {
 
         public bool CanUserClose { get; } = true;
 

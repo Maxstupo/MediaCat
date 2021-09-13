@@ -2,7 +2,7 @@
     using System.Threading.Tasks;
     using MediaCat.Core.Services.Localization;
 
-    public sealed class StorageDialogViewModel : ScreenBase, ICanRefreshData {
+    public sealed class StorageDialogViewModel : ViewModelBase, ICanRefreshData {
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
