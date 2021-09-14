@@ -15,7 +15,7 @@
         private readonly StorageDialogViewModel storageDialogViewModel;
         private readonly Func<SearchTabViewModel> searchTabViewModelFactory;
 
-        public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager, 
+        public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager,
             StorageDialogViewModel storageDialogViewModel,
             Func<SearchTabViewModel> searchTabViewModelFactory) : base(i18n) {
             this.fileFolderDialog = fileFolderDialog;
@@ -42,10 +42,9 @@
 
         public void ShowNewCatalogDialog() { }
         public void ShowOpenCatalogDialog() { }
-
         public void ShowImportFilesDialog() { }
 
-        public void ShowStorageLocationsDialog() { 
+        public void ShowStorageLocationsDialog() {
             windowManager.ShowDialog(storageDialogViewModel, this);
         }
 

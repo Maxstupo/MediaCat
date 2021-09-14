@@ -1,4 +1,10 @@
 ﻿{
+  "yes": "Yes",
+  "no": "No",
+  "close": "Close",
+  "confirm": "OK",
+  "cancel": "Cancel",
+  "browse": "Browse",
   "windows": {
     "main": {
       "title": "MediaCat",
@@ -39,12 +45,34 @@
         }
       },
       "columns": {
+        "status": "Status",
         "label": "Label",
         "path": "Path",
         "default": "Is Default?",
         "total_files": "Total File(s)",
         "used_space": "Used Space"
       }
+    },
+    "add_store": {
+      "title": "Add Storage Location...",
+      "name": "Name",
+      "location": "Location",
+      "is_default": "Is Default?",
+      "browse": {
+        "$val": "@browse",
+        "title": "Select a location..."
+      },
+      "can_be_relative": {
+        "$val": "The selected location can be used as a relative path. Do you want to convert this location to a relative path?",
+        "title": "@windows.main.title"
+      },
+      "failed": {
+        "$val": "Failed to create storage location. Error Status: {0}",
+        "title": "@windows.main.title"
+      }
+    },
+    "edit_store": {
+      "title": "Edit Storage Location..."
     }
   },
   "tabs": {

@@ -58,8 +58,10 @@
     <Compile Include="Services\Localization\Readers\JsonTreeReader.cs" />
     <Compile Include="Services\Localization\LocaleFormat.cs" />
     <Compile Include="Services\Localization\Language.cs" />
+    <Compile Include="Utility\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
     <Compile Include="Utility\MimeTypesMap.cs" />
+    <Compile Include="Utility\Extensions\PathExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

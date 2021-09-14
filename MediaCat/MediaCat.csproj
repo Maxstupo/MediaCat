@@ -67,12 +67,18 @@
     <Compile Include="Utility\BindingProxy.cs" />
     <Compile Include="Utility\MappingViewManager.cs" />
     <Compile Include="Utility\NLogLogger.cs" />
+    <Compile Include="ViewModels\Dialogs\AddStoreDialogViewModel.cs" />
+    <Compile Include="ViewModels\StorageLocationViewModel.cs" />
     <Compile Include="ViewModels\ICanRefreshData.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\Tabs\ITabPage.cs" />
     <Compile Include="ViewModels\Tabs\SearchTabViewModel.cs" />
     <Compile Include="ViewModels\Windows\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StorageDialogViewModel.cs" />
+    <Page Include="Views\Dialogs\AddStoreDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Tabs\SearchTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

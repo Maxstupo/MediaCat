@@ -66,7 +66,8 @@
             IDatabase db = Container.Get<IDatabase>();
          
             db.CreateAsync("./test.sqlite3").Wait();
-
+            db.OpenAsync("./test.sqlite3").Wait();
+                   
             // init i18n
             II18N i18n = Container.Get<II18N>();
 

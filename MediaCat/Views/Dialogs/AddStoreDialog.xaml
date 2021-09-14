@@ -1,0 +1,67 @@
+﻿<Window x:Class="MediaCat.Views.Dialogs.AddStoreDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCat.Views.Dialogs"
+        xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:vmd="clr-namespace:MediaCat.ViewModels.Dialogs"
+        xmlns:c="clr-namespace:MediaCat.Converters"
+        xmlns:util="clr-namespace:MediaCat.Utility"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vmd:AddStoreDialogViewModel, IsDesignTimeCreatable=True}"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+      MinHeight="195" MaxHeight="250" Height="220" Width="500">
+    <Window.Resources>
+        <util:BindingProxy x:Key="proxy" Data="{Binding}"/>
+        <c:BooleanToStringConverter x:Key="titleConverter" c:FalseText="{Binding Data.I18N[dialogs.add_store.title], Source={StaticResource proxy}}" c:TrueText="{Binding Data.I18N[dialogs.edit_store.title], Source={StaticResource proxy}}"/>
+    </Window.Resources>
+    <Window.Title>
+        <Binding Converter="{StaticResource titleConverter}" Path="EditMode"/>
+    </Window.Title>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Row="0" Grid.ColumnSpan="3" Header="{Binding I18N[dialogs.add_store.name]}" Margin="5">
+            <!--Label-->
+            <TextBox Margin="0 4" HorizontalAlignment="Stretch" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Grid.ColumnSpan="3"  Header="{Binding I18N[dialogs.add_store.location]}" Margin="5">
+            <Grid>
+                <Grid.Resources>
+                    <c:BooleanInverterConverter x:Key="inverter"/>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="75"/>
+                </Grid.ColumnDefinitions>
+                <!--Path-->
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="0 4" HorizontalAlignment="Stretch" Text="{Binding Location, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                <!--Browse Button-->
+                <Button Grid.Row="0" Grid.Column="2" Margin="4" Content="{Binding I18N[dialogs.add_store.browse]}" Command="{s:Action Browse}" IsEnabled="{Binding EditMode,Converter={StaticResource inverter}}"/>
+            </Grid>
+        </GroupBox>
+
+        <!--Is Default?-->
+        <CheckBox Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Content="{Binding I18N[dialogs.add_store.is_default]}" IsChecked="{Binding IsDefault}" VerticalAlignment="Top" Margin="5"/>
+       
+        <Grid Grid.Row="3" Grid.ColumnSpan="3" >
+            <Button Content="{Binding I18N[confirm]}" Command="{s:Action Confirm}" IsDefault="True" HorizontalAlignment="Right" Margin="10 10 100 10" Width="75"/>
+            <Button Content="{Binding I18N[cancel]}" Command="{s:Action Cancel}" IsCancel="True" HorizontalAlignment="Right" Margin="10 10 10 10" Width="75" />
+        </Grid>
+
+    </Grid>
+</Window>

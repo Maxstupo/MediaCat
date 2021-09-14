@@ -10,12 +10,12 @@
 
         Exists = 4,
         Directory = 8,
-        Location = 16,
-        Label = 32,
+        Label = 16,
+        Path = 32,
 
-        DirectoryExists = Failure | Exists | Directory,
-        DirectoryAlreadyUsed = Failure | Exists | Location,
-        LabelAlreadyUsed = Failure | Exists | Label
+        DirectoryExists = Failure | Directory | Exists,
+        LabelExists = Failure | Label | Exists,
+        PathExists = Failure | Path | Exists
     }
 
     [Flags]
@@ -26,13 +26,14 @@
 
         Open = 4,
         Closed = 8,
-        HasCatalog = 16,
-        NoCatalog = 32,
+        Has = 16,
+        Not = 32,
+        Catalog = 64,
 
-        Exists = Failure | HasCatalog,
-        NotExists = Failure | NoCatalog,
-        AlreadyOpen = Failure | Open,
-        AlreadyClosed = Failure | Closed,
+        FailureHasCatalog = Failure | Has | Catalog,
+        FailureNoCatalog = Failure | Has | Not | Catalog,
+        FailureOpen = Failure | Open,
+        FailureClosed = Failure | Closed,
 
     }
 

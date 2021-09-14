@@ -1,5 +1,6 @@
 ﻿namespace MediaCat.ViewModels {
     using System;
+    using System.Threading.Tasks;
     using MediaCat.Core.Services.Localization;
     using MediaCat.Services;
     using Stylet;
@@ -47,6 +48,12 @@
         public virtual async void OnOpen() {
             if (this is ICanRefreshData refresh)
                 await refresh.RefreshDataAsync();
+        }
+
+        public override async Task<bool> CanCloseAsync() {
+            if (this is ICanRefreshData refresh)
+                return !refresh.IsRefreshingData && await base.CanCloseAsync();
+            return await base.CanCloseAsync();
         }
 
         protected override void OnInitialActivate() {

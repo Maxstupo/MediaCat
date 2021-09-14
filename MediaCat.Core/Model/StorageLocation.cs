@@ -1,6 +1,18 @@
 ﻿namespace MediaCat.Core.Model {
     using SQLite;
 
+    public enum StoreStatus : int {
+        /// <summary>Everything is fine.</summary>
+        Ok = 0,
+        /// <summary>The storage location doesn't exist at the specified path.</summary>
+        Missing = 1,
+        /// <summary>The storage location GUID and the actual GUID in the folder don't match.</summary>
+        Mismatch = 2,
+        /// <summary>The storage location is missing the GUID file or the folder structure is incorrect.</summary>
+        Invalid = 3
+    }
+
+
     public sealed class StorageLocation {
 
         [PrimaryKey, AutoIncrement]
@@ -21,10 +33,13 @@
         public bool IsDefault { get; set; }
 
         /// <summary>The total number of files stored in this storage location.</summary>
-        public long TotalFiles { get; set; } 
+        public long TotalFiles { get; set; }
 
         /// <summary>The total number of bytes all files within this storage location use.</summary>
         public long UsedSpace { get; }
+
+        [Ignore]
+        public StoreStatus Status { get; set; }
 
     }
 

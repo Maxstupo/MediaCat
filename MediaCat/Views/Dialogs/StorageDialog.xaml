@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:MediaCat.Views.Dialogs"
         xmlns:vmd ="clr-namespace:MediaCat.ViewModels.Dialogs"
         xmlns:util="clr-namespace:MediaCat.Utility"
-        xmlns:s="https://github.com/canton7/Stylet"        
+        xmlns:s="https://github.com/canton7/Stylet"  
+        xmlns:c="clr-namespace:MediaCat.Converters"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmd:StorageDialogViewModel, IsDesignTimeCreatable=True}"
@@ -14,6 +15,9 @@
         WindowStyle="ToolWindow"
         Title="{Binding I18N[dialogs.storage.title]}" Height="400" Width="650">
     <Grid>
+        <Grid.Resources>
+            <c:BooleanInverterConverter x:Key="inverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="3*"/>
@@ -29,19 +33,21 @@
             CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" HeadersVisibility="Column" IsReadOnly="True">
             <DataGrid.Resources>
                 <util:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                <c:BooleanToStringConverter x:Key="booltostring" c:TrueText="{Binding Data.I18N[yes], Source={StaticResource proxy}}" c:FalseText="{Binding Data.I18N[no], Source={StaticResource proxy}}" />
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.label], Source={StaticResource proxy}}"/>
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.path], Source={StaticResource proxy}}" Width="*"/>
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.default], Source={StaticResource proxy}}"/>
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.total_files], Source={StaticResource proxy}}" />
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.used_space], Source={StaticResource proxy}}" />
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.status], Source={StaticResource proxy}}" Binding="{Binding Status}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.label], Source={StaticResource proxy}}" Binding="{Binding Label}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.path], Source={StaticResource proxy}}" Width="*" Binding="{Binding Path}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.default], Source={StaticResource proxy}}" Binding="{Binding IsDefault, Converter={StaticResource booltostring}}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.total_files], Source={StaticResource proxy}}" Binding="{Binding TotalFiles}" />
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.storage.columns.used_space], Source={StaticResource proxy}}" Binding="{Binding UsedSpace}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Loading indicator. -->
-        <Button Grid.Row="2" Style="{StaticResource IconButton}" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="{Binding I18N[dialogs.storage.actions.refresh.tooltip]}">
-            <iconPacks:PackIconMaterial Kind="Refresh" Spin="False" />
+        <Button Grid.Row="2" Style="{StaticResource IconButton}" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="{Binding I18N[dialogs.storage.actions.refresh.tooltip]}" Command="{s:Action RefreshDataAsync}">
+            <iconPacks:PackIconMaterial Kind="Refresh" Spin="{Binding IsRefreshingData}" />
         </Button>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -52,7 +58,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="4" Margin="8" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Width="75" Content="{Binding I18N[close]}" IsDefault="True" IsCancel="True"  Command="{s:Action Cancel}"/>
+            <Button Width="75" Content="{Binding I18N[close]}" IsDefault="True" IsCancel="True"  Command="{s:Action RequestClose}"/>
         </StackPanel>
     </Grid>
 </Window>
