@@ -29,7 +29,7 @@
         <TextBlock Margin="4 12 4 8" Grid.Row="0" Text="{Binding I18N[dialogs.storage.description]}"/>
 
 
-        <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" ItemsSource="{Binding Items}"
+        <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
             CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" HeadersVisibility="Column" IsReadOnly="True">
             <DataGrid.Resources>
                 <util:BindingProxy x:Key="proxy" Data="{Binding}"/>

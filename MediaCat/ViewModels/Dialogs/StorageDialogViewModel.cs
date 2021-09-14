@@ -17,6 +17,8 @@
 
         private readonly AddStoreDialogViewModel storeDialogViewModel;
 
+
+        public StorageLocationViewModel SelectedItem { get; set; }
         public BindableCollection<StorageLocationViewModel> Items { get; } = new BindableCollection<StorageLocationViewModel>();
 
         public bool IsRefreshingData { get; private set; }
@@ -52,8 +54,8 @@
 
         public bool CanAddStore => !IsRefreshingData;
         public void AddStore() {
-            if (windowManager.ShowDialog(storeDialogViewModel, this).GetValueOrDefault()) 
-                Items.Add(new StorageLocationViewModel(storeDialogViewModel.Result));            
+            if (windowManager.ShowDialog(storeDialogViewModel, this).GetValueOrDefault())
+                Items.Add(new StorageLocationViewModel(storeDialogViewModel.Result));
         }
 
         public bool CanMoveStore => false;
@@ -62,8 +64,12 @@
         public bool CanMergeStore => false;
         public void MergeStore() { }
 
-        public bool CanDeleteStore => false;
-        public void DeleteStore() { }
+        public bool CanDeleteStore => !IsRefreshingData && SelectedItem != null;
+        public async Task DeleteStore() {
+
+            await catalog.DeleteStoreAsync(SelectedItem.Storage);
+
+        }
 
     }
 

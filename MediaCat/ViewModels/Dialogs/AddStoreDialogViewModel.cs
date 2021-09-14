@@ -81,7 +81,7 @@
 
         public bool CanConfirm => !string.IsNullOrWhiteSpace(Location) && !string.IsNullOrWhiteSpace(Name) && !CheckPathExists();
         public async Task Confirm() {
-            CatalogStorageResult result = await catalog.CreateStoreAsync(Name, Path, IsDefault);
+            CatalogStorageResult result = await Task.Run(() => catalog.CreateStoreAsync(Name, Path, IsDefault));
 
             if (result.Status.HasFlag(StorageLocationStatus.Failure)) {
                 Logger.Error("Failed to create store: {status}", result.Status);

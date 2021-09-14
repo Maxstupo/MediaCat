@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
 
     [Flags]
-    public enum StorageLocationStatus {
+    public enum StorageLocationStatus { // TODO: Clean up
         None = 0,
         Success = 1,
         Failure = 2,
@@ -12,14 +12,22 @@
         Directory = 8,
         Label = 16,
         Path = 32,
+        Empty = 64,
+        Not = 128,
+        Invalid = 256,
+        Mismatch = 512,
 
         DirectoryExists = Failure | Directory | Exists,
+        DirectoryNotExists = Failure | Directory | Not | Exists,
         LabelExists = Failure | Label | Exists,
-        PathExists = Failure | Path | Exists
+        PathExists = Failure | Path | Exists,
+        NotEmpty = Failure | Not | Empty,
+        FailureInvalid = Failure | Invalid,
+        FailureMismatch = Failure | Mismatch
     }
 
     [Flags]
-    public enum CatalogStatus {
+    public enum CatalogStatus { // TODO: Clean up
         None = 0,
         Success = 1,
         Failure = 2,

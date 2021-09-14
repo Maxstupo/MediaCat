@@ -165,6 +165,20 @@
 
             Logger.Info("Create storage location: {path} ({label}) {guid}", location.Path, location.Label, location.GUID);
 
+            // If this new location is default, make all other storage locations not default.
+            if (location.IsDefault) {
+                List<StorageLocation> storageLocations = await connection.Table<StorageLocation>().Where(x => x.IsDefault).ToListAsync();
+                storageLocations.ForEach(x => x.IsDefault = false);
+
+                await connection.UpdateAllAsync(storageLocations);
+            } else {
+                // Make this storage location the default if no default store exists.
+                location.IsDefault = await connection.Table<StorageLocation>().Where(x => x.IsDefault).CountAsync() == 0;
+            }
+
+            Logger.Trace("Updating database...");
+            await connection.InsertAsync(location);
+
             // create folder // TODO: Check if we have write access.
             fileSystem.Directory.CreateDirectory(storePath);
 
@@ -190,46 +204,72 @@
                 Logger.Error(e, "Failed to set storage location GUID file attributes when creating new storage loation: {path} ({label}) {guid}", location.Path, location.Label, location.GUID);
             }
 
-            // If this new location is default, make all other storage locations not default.
-            if (location.IsDefault) {
-                List<StorageLocation> storageLocations = await connection.Table<StorageLocation>().Where(x => x.IsDefault).ToListAsync();
-                storageLocations.ForEach(x => x.IsDefault = false);
-
-                await connection.UpdateAllAsync(storageLocations);
-            }
-
-            Logger.Trace("Updating database...");
-            await connection.InsertAsync(location);
-
             return new CatalogStorageResult(location, StorageLocationStatus.Success);
         }
 
-        public Task<CatalogStorageResult> DeleteStoreAsync(StorageLocation storageLocation) {
-            return Task.FromResult(new CatalogStorageResult());
+        public async Task<CatalogStorageResult> DeleteStoreAsync(StorageLocation storageLocation) {
+            if (storageLocation.TotalFiles > 0 || storageLocation.UsedSpace > 0)
+                return new CatalogStorageResult(StorageLocationStatus.NotEmpty);
+
+            ValidateStorageLocation(storageLocation);
+
+            switch (storageLocation.Status) {
+                case StoreStatus.Missing:
+                    return new CatalogStorageResult(StorageLocationStatus.DirectoryNotExists);
+                case StoreStatus.Invalid:
+                    return new CatalogStorageResult(StorageLocationStatus.FailureInvalid);
+                case StoreStatus.Mismatch:
+                    return new CatalogStorageResult(StorageLocationStatus.FailureMismatch);
+                default: break;
+            }
+
+            Logger.Info("Delete storage location: {path} ({label}) {guid}", storageLocation.Path, storageLocation.Label, storageLocation.GUID);
+
+            string storePath = ResolveStorageLocationPath(storageLocation);
+
+            Logger.Debug("Unsetting read-only on GUID file...");
+            string guidFilepath = GetStorageLocationGuidPath(storageLocation);
+            // Set the file attributes
+            try { // catch exception since readonly attribute is optional.
+                System.IO.FileAttributes attr = fileSystem.File.GetAttributes(guidFilepath);
+                attr &= ~System.IO.FileAttributes.ReadOnly;
+                fileSystem.File.SetAttributes(guidFilepath, attr);
+            } catch (UnauthorizedAccessException e) {
+                Logger.Error(e, "Failed to set storage location GUID file attributes when deleting storage loation: {path} ({label}) {guid}", storageLocation.Path, storageLocation.Label, storageLocation.GUID);
+            }
+
+            Logger.Trace("Updating database...");
+            // TODO: Check if we have write access
+            fileSystem.Directory.Delete(storePath, true);
+
+            await connection.DeleteAsync(storageLocation);
+
+            return new CatalogStorageResult(StorageLocationStatus.Success);
         }
 
         public async Task<List<StorageLocation>> GetStoresAsync() {
             List<StorageLocation> results = await connection.Table<StorageLocation>().ToListAsync();
 
             // Update store status based on GUID and directory existance.
-            results.ForEach(storageLocation => {
-                string storePath = ResolveStorageLocationPath(storageLocation);
-                if (!fileSystem.Directory.Exists(storePath)) {
-                    storageLocation.Status = StoreStatus.Missing;
-                } else {
-                    string guidFilepath = GetStorageLocationGuidPath(storageLocation);
-                    if (!fileSystem.File.Exists(guidFilepath)) {
-                        storageLocation.Status = StoreStatus.Invalid;
-
-                    } else {
-                        string guid = fileSystem.File.ReadAllText(guidFilepath, Encoding.UTF8);
-                        storageLocation.Status = guid.Equals(storageLocation.GUID, StringComparison.Ordinal) ? StoreStatus.Ok : StoreStatus.Mismatch;
-
-                    }
-                }
-            });
+            results.ForEach(storageLocation => ValidateStorageLocation(storageLocation));
 
             return results;
+        }
+
+        public StorageLocation ValidateStorageLocation(StorageLocation storageLocation) {
+            string storePath = ResolveStorageLocationPath(storageLocation);
+            if (!fileSystem.Directory.Exists(storePath)) {
+                storageLocation.Status = StoreStatus.Missing;
+            } else {
+                string guidFilepath = GetStorageLocationGuidPath(storageLocation);
+                if (!fileSystem.File.Exists(guidFilepath)) {
+                    storageLocation.Status = StoreStatus.Invalid;
+                } else {
+                    string guid = fileSystem.File.ReadAllText(guidFilepath, Encoding.UTF8);
+                    storageLocation.Status = guid.Equals(storageLocation.GUID, StringComparison.Ordinal) ? StoreStatus.Ok : StoreStatus.Mismatch;
+                }
+            }
+            return storageLocation;
         }
 
         #endregion
