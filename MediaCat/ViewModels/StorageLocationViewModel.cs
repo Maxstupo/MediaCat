@@ -2,9 +2,10 @@
     using System;
     using System.Collections.Generic;
     using MediaCat.Core.Model;
+    using Stylet;
 
-    public class StorageLocationViewModel : IEquatable<StorageLocationViewModel> {
-      
+    public class StorageLocationViewModel : PropertyChangedBase, IEquatable<StorageLocationViewModel> {
+
         public string Status => Storage.Status.ToString();
 
         public string Label => Storage.Label;
@@ -17,10 +18,14 @@
 
         public long UsedSpace => Storage.UsedSpace;
 
-        public StorageLocation Storage { get; } // The model is public only for interacting with the repository.
+        public Store Storage { get; } // The model is public only for interacting with the repository.
 
-        public StorageLocationViewModel(StorageLocation location) {
+        public StorageLocationViewModel(Store location) {
             this.Storage = location;
+        }
+
+        public void NotifyAllPropertiesChanged() {
+            base.NotifyOfPropertyChange(null);
         }
 
         public override bool Equals(object obj) {
@@ -29,11 +34,11 @@
 
         public bool Equals(StorageLocationViewModel other) {
             return other != null &&
-                   EqualityComparer<StorageLocation>.Default.Equals(this.Storage, other.Storage);
+                   EqualityComparer<Store>.Default.Equals(this.Storage, other.Storage);
         }
 
         public override int GetHashCode() {
-            return 1612953078 + EqualityComparer<StorageLocation>.Default.GetHashCode(this.Storage);
+            return 1612953078 + EqualityComparer<Store>.Default.GetHashCode(this.Storage);
         }
 
         public static bool operator ==(StorageLocationViewModel left, StorageLocationViewModel right) {

@@ -12,7 +12,7 @@
         d:DataContext="{d:DesignInstance vmd:AddStoreDialogViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
-      MinHeight="195" MaxHeight="250" Height="220" Width="500">
+        MinHeight="280" MaxHeight="300" Height="280" Width="500">
     <Window.Resources>
         <util:BindingProxy x:Key="proxy" Data="{Binding}"/>
         <c:BooleanToStringConverter x:Key="titleConverter" c:FalseText="{Binding Data.I18N[dialogs.add_store.title], Source={StaticResource proxy}}" c:TrueText="{Binding Data.I18N[dialogs.edit_store.title], Source={StaticResource proxy}}"/>
@@ -24,6 +24,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -33,16 +35,18 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Row="0" Grid.ColumnSpan="3" Header="{Binding I18N[dialogs.add_store.name]}" Margin="5">
+        <GroupBox Grid.Row="0" Grid.ColumnSpan="3" Header="{Binding I18N[dialogs.add_store.label]}" Margin="5 5 5 2.5">
             <!--Label-->
+            <TextBox Margin="0 4" HorizontalAlignment="Stretch" Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+        
+        <GroupBox Grid.Row="1" Grid.ColumnSpan="3" Header="{Binding I18N[dialogs.add_store.name]}" Margin="5 8 5 5">
+            <!--Name-->
             <TextBox Margin="0 4" HorizontalAlignment="Stretch" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
 
-        <GroupBox Grid.Row="1" Grid.ColumnSpan="3"  Header="{Binding I18N[dialogs.add_store.location]}" Margin="5">
+        <GroupBox Grid.Row="2" Grid.ColumnSpan="3"  Header="{Binding I18N[dialogs.add_store.location]}" Margin="5 2.5 5 2.5">
             <Grid>
-                <Grid.Resources>
-                    <c:BooleanInverterConverter x:Key="inverter"/>
-                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -51,15 +55,19 @@
                 <!--Path-->
                 <TextBox Grid.Row="0" Grid.Column="1" Margin="0 4" HorizontalAlignment="Stretch" Text="{Binding Location, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                 <!--Browse Button-->
-                <Button Grid.Row="0" Grid.Column="2" Margin="4" Content="{Binding I18N[dialogs.add_store.browse]}" Command="{s:Action Browse}" IsEnabled="{Binding EditMode,Converter={StaticResource inverter}}"/>
+                <Button Grid.Row="0" Grid.Column="2" Margin="4" Content="{Binding I18N[dialogs.add_store.browse]}" Command="{s:Action Browse}" />
             </Grid>
         </GroupBox>
 
         <!--Is Default?-->
-        <CheckBox Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Content="{Binding I18N[dialogs.add_store.is_default]}" IsChecked="{Binding IsDefault}" VerticalAlignment="Top" Margin="5"/>
-       
-        <Grid Grid.Row="3" Grid.ColumnSpan="3" >
-            <Button Content="{Binding I18N[confirm]}" Command="{s:Action Confirm}" IsDefault="True" HorizontalAlignment="Right" Margin="10 10 100 10" Width="75"/>
+        <CheckBox Grid.Row="3" Grid.Column="0"   Content="{Binding I18N[dialogs.add_store.is_default]}" IsChecked="{Binding IsDefault}" VerticalAlignment="Center" Margin="5 2.5 5 5"/>
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="3" >
+            <Grid.Resources>
+                <c:BooleanToStringConverter x:Key="confirmConverter" c:FalseText="{Binding Data.I18N[dialogs.add_store.confirm], Source={StaticResource proxy}}" c:TrueText="{Binding Data.I18N[dialogs.edit_store.confirm], Source={StaticResource proxy}}"/>
+
+            </Grid.Resources>
+            <Button Content="{Binding EditMode, Converter={StaticResource confirmConverter}}" Command="{s:Action Confirm}" IsDefault="True" HorizontalAlignment="Right" Margin="10 10 100 10" Width="75"/>
             <Button Content="{Binding I18N[cancel]}" Command="{s:Action Cancel}" IsCancel="True" HorizontalAlignment="Right" Margin="10 10 10 10" Width="75" />
         </Grid>
 

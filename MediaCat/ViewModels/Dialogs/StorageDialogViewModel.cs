@@ -13,7 +13,7 @@
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly IWindowManager windowManager;
-        private readonly ICatalog catalog;
+        private readonly IWarehouse catalog;
 
         private readonly AddStoreDialogViewModel storeDialogViewModel;
 
@@ -24,7 +24,7 @@
         public bool IsRefreshingData { get; private set; }
 
 
-        public StorageDialogViewModel(II18N i18n, IWindowManager windowManager, ICatalog catalog, AddStoreDialogViewModel storeDialogViewModel) : base(i18n) {
+        public StorageDialogViewModel(II18N i18n, IWindowManager windowManager, IWarehouse catalog, AddStoreDialogViewModel storeDialogViewModel) : base(i18n) {
             this.windowManager = windowManager;
             this.catalog = catalog;
             this.storeDialogViewModel = storeDialogViewModel;
@@ -44,7 +44,7 @@
                 await Task.Delay(250);
 #endif
 
-                List<StorageLocation> stores = await catalog.GetStoresAsync();
+                List<Store> stores = await catalog.GetStoresAsync();
                 Items.AddRange(stores.Select(x => new StorageLocationViewModel(x)));
             }
             IsRefreshingData = false;
@@ -55,20 +55,31 @@
         public bool CanAddStore => !IsRefreshingData;
         public void AddStore() {
             if (windowManager.ShowDialog(storeDialogViewModel, this).GetValueOrDefault())
-                Items.Add(new StorageLocationViewModel(storeDialogViewModel.Result));
+                Items.Add(new StorageLocationViewModel(storeDialogViewModel.StorageLocation));
         }
 
-        public bool CanMoveStore => false;
-        public void MoveStore() { }
+        public bool CanEditStore => !IsRefreshingData && SelectedItem != null;
+        public async Task EditStore() {
+            storeDialogViewModel.EditMode = true;
+            storeDialogViewModel.StorageLocation = SelectedItem.Storage;
+
+            if (windowManager.ShowDialog(storeDialogViewModel, this).GetValueOrDefault())
+                await RefreshDataAsync();
+        }
 
         public bool CanMergeStore => false;
         public void MergeStore() { }
 
         public bool CanDeleteStore => !IsRefreshingData && SelectedItem != null;
         public async Task DeleteStore() {
+            if (SelectedItem.TotalFiles > 0) {
+                windowManager.ShowMessageBox(I18N["dialogs.storage.actions.remove.deletion_with_files"], I18N["dialogs.storage.actions.remove.deletion_with_files.title"], System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Exclamation);
 
-            await catalog.DeleteStoreAsync(SelectedItem.Storage);
-
+            } else if (windowManager.ShowMessageBox(I18N["dialogs.storage.actions.remove.confirm_delete"], I18N["dialogs.storage.actions.remove.confirm_delete.title"], System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxResult.No) == System.Windows.MessageBoxResult.Yes) {
+                await catalog.DeleteStoreAsync(SelectedItem.Storage);
+                await RefreshDataAsync();
+            }
         }
 
     }

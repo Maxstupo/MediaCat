@@ -53,9 +53,8 @@
             builder.Bind<IPath>().ToInstance(fileSystem.Path);
 
             // bind catalog system
-            ICatalog catalog = new SQLiteDatabaseCatalog(fileSystem);
-            builder.Bind<ICatalog>().ToInstance(catalog);
-            builder.Bind<IDatabase>().ToInstance(catalog);
+            builder.Bind<IDatabase>().And<ISQLiteDatabase>().To<MediaCatDatabase>().InSingletonScope();
+            builder.Bind<IWarehouse>().To<Warehouse>().InSingletonScope();
 
         }
 
@@ -64,10 +63,10 @@
 
             IFileSystem fileSystem = Container.Get<IFileSystem>();
             IDatabase db = Container.Get<IDatabase>();
-         
+
             db.CreateAsync("./test.sqlite3").Wait();
             db.OpenAsync("./test.sqlite3").Wait();
-                   
+
             // init i18n
             II18N i18n = Container.Get<II18N>();
 

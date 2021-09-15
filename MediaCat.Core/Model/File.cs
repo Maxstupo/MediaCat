@@ -9,13 +9,13 @@
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        /// <summary>The storage location id this file is located in.</summary>
-        [ForeignKey(typeof(StorageLocation))]
+        /// <summary>The store id this file is located in.</summary>
+        [ForeignKey(typeof(Store))]
         public int StorageId { get; set; }
 
-        /// <summary>The storage location this file is located in.</summary>
+        /// <summary>The store this file is located in.</summary>
         [OneToOne]
-        public StorageLocation Storage { get; set; }
+        public Store Storage { get; set; }
 
         /// <summary>The original filepath this file was located at before being imported. If the storage location isn't defined, this filepath will be used instead.</summary>
         public string ImportFilepath { get; set; }

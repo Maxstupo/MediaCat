@@ -44,11 +44,13 @@
   <ItemGroup>
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\Mime.cs" />
-    <Compile Include="Model\StorageLocation.cs" />
+    <Compile Include="Model\Store.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Catalog\Database\SQLiteDatabaseCatalog.cs" />
-    <Compile Include="Services\Catalog\ICatalog.cs" />
-    <Compile Include="Services\Catalog\IDatabase.cs" />
+    <Compile Include="Services\Catalog\Database\MediaCatDatabase.cs" />
+    <Compile Include="Services\Catalog\Warehouse.cs" />
+    <Compile Include="Services\Catalog\Database\SQLiteDatabase.cs" />
+    <Compile Include="Services\Catalog\IWarehouse.cs" />
+    <Compile Include="Services\Catalog\Database\IDatabase.cs" />
     <Compile Include="Services\Localization\II18N.cs" />
     <Compile Include="Services\Localization\ILocaleProvider.cs" />
     <Compile Include="Services\Localization\ILocaleReader.cs" />

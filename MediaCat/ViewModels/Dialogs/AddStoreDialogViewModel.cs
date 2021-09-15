@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using MediaCat.Core.Model;
     using MediaCat.Core.Services.Catalog;
+    using MediaCat.Core.Services.Catalog.Database;
     using MediaCat.Core.Services.Localization;
     using MediaCat.Core.Utility.Extensions;
     using MediaCat.Services;
@@ -15,25 +16,39 @@
 
         private readonly IFileFolderDialog fileFolderDialog;
         private readonly IWindowManager windowManager;
-        private readonly ICatalog catalog;
+        private readonly IWarehouse catalog;
         private readonly IDatabase database;
         private readonly IFileSystem fileSystem;
 
-        public StorageLocation Result { get; private set; }
+        public Store StorageLocation { get; set; } = new Store();
 
         public bool EditMode { get; set; } = false;
 
+        private string label = string.Empty;
+        public string Label {
+            get => label;
+            set {
+                if (string.IsNullOrWhiteSpace(Name) || Name == ToAlphaNumeric(Label))
+                    Name = value;
+                label = value;
+            }
+        }
+
         private string name = string.Empty;
-        public string Name { get => name; set => name = Regex.Replace(value, "[^a-zA-Z0-9_-]+", string.Empty, RegexOptions.Compiled); }
+        public string Name {
+            get => name;
+            set => name = ToAlphaNumeric(value);
+        }
+
+        private string ToAlphaNumeric(string value) => Regex.Replace(value, "[^a-zA-Z0-9_-]+", string.Empty, RegexOptions.Compiled);
 
         public string Location { get; set; } = string.Empty;
 
         public bool IsDefault { get; set; }
 
-
         public string Path => fileSystem.Path.Combine(Location, Name);
 
-        public AddStoreDialogViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager, ICatalog catalog, IDatabase database, IFileSystem fileSystem) : base(i18n) {
+        public AddStoreDialogViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager, IWarehouse catalog, IDatabase database, IFileSystem fileSystem) : base(i18n) {
             this.fileFolderDialog = fileFolderDialog;
             this.windowManager = windowManager;
             this.catalog = catalog;
@@ -46,11 +61,20 @@
         }
 
         public override void OnOpen() {
-            if (!EditMode) {
-                Name = string.Empty;
-                Location = string.Empty;
+            if (EditMode) { // Edit mode, set properties to equal existing storage location.
+                if (StorageLocation == null)
+                    throw new System.Exception("StorageLocation is null! EditMode requires a StorageLocation!");
+
+                Label = StorageLocation.Label;
+                Name = fileSystem.Path.GetFileName(StorageLocation.Path);
+                Location = fileSystem.Path.GetDirectoryName(StorageLocation.Path);
+                IsDefault = StorageLocation.IsDefault;
+
+            } else { // Clear properties
+                StorageLocation = null;
+                Label = Name = Location = string.Empty;
                 IsDefault = false;
-                Result = null;
+
             }
         }
 
@@ -79,24 +103,38 @@
         }
 
 
-        public bool CanConfirm => !string.IsNullOrWhiteSpace(Location) && !string.IsNullOrWhiteSpace(Name) && !CheckPathExists();
+        public bool CanConfirm => !string.IsNullOrWhiteSpace(Label) && !string.IsNullOrWhiteSpace(Location) && !string.IsNullOrWhiteSpace(Name)
+            && (EditMode || !CheckPathExists());
         public async Task Confirm() {
-            CatalogStorageResult result = await Task.Run(() => catalog.CreateStoreAsync(Name, Path, IsDefault));
 
-            if (result.Status.HasFlag(StorageLocationStatus.Failure)) {
-                Logger.Error("Failed to create store: {status}", result.Status);
-
-                windowManager.ShowMessageBox(I18N.Get("dialogs.add_store.failed", result.Status), I18N["dialogs.add_store.failed.title"], System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-
-                RequestClose(false);
-            } else {
-                Result = result.StorageLocation;
-                RequestClose(true);
+            if (EditMode) {
+                StorageLocation.Path = Path;
+                StorageLocation.Label = Label;
+                StorageLocation.IsDefault = IsDefault;
             }
+
+            WarehouseResult result = !EditMode ?
+                await Task.Run(() => catalog.CreateStoreAsync(Label, Path, IsDefault)) :
+                await Task.Run(() => catalog.EditStoreAsync(StorageLocation));
+
+            bool hasFailure = result.Status.HasFlag(WarehouseStoreStatus.Failure);
+
+            if (hasFailure) {
+                Logger.Error($"Failed to {(EditMode ? "edit" : "create")} store: {{status}}", result.Status);
+
+                windowManager.ShowMessageBox(I18N.Get($"dialogs.{(EditMode ? "edit" : "add")}_store.failed", result.Status), I18N[$"dialogs.{(EditMode ? "edit" : "add")}_store.failed.title"], System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+
+            } else if (!EditMode) {
+                StorageLocation = result.Store;
+            }
+
+            EditMode = false;
+            RequestClose(!hasFailure);
 
         }
 
         public void Cancel() {
+            EditMode = false;
             RequestClose(false);
         }
 

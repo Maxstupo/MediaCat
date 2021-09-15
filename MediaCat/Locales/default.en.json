@@ -34,15 +34,24 @@
       "actions": {
         "refresh": { "tooltip": "Refresh available stores" },
         "add": { "tooltip": "Add a new store" },
-        "move": {
-          "$val": "Move stores",
-          "tooltip": "Move stores"
+        "edit": {
+          "$val": "Edit store",
+          "tooltip": "Edit store"
         },
         "merge": { "tooltip": "Merge stores" },
         "remove": {
           "$val": "Remove store",
-          "tooltip": "Remove store"
-        }
+          "tooltip": "Remove store",
+          "confirm_delete": {
+            "$val": "Are you sure you want to delete this storage location?",
+            "title": "@windows.main.title"
+          },
+          "deletion_with_files": {
+            "$val": "The storage location must be empty! Unable to delete. Use merge to move files to another storage location.",
+            "title": "@windows.main.title"
+          }
+        },
+       
       },
       "columns": {
         "status": "Status",
@@ -55,9 +64,11 @@
     },
     "add_store": {
       "title": "Add Storage Location...",
+      "label": "Label",
       "name": "Name",
       "location": "Location",
       "is_default": "Is Default?",
+      "confirm": "@confirm",
       "browse": {
         "$val": "@browse",
         "title": "Select a location..."
@@ -72,7 +83,8 @@
       }
     },
     "edit_store": {
-      "title": "Edit Storage Location..."
+      "title": "Edit Storage Location...",
+      "confirm": "Edit"
     }
   },
   "tabs": {
