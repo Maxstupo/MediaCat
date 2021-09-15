@@ -20,6 +20,7 @@
         private readonly IDatabase database;
         private readonly IFileSystem fileSystem;
 
+        // TODO: Rewrite using Stylet EventAggregator so we can just publish/subscribe when a new store is created. 
         /// <summary>If edit mode is false, this is the result that can be accessed after the dialog is confirmed. Edit mode - this is the store this view model is editing.</summary>
         public Store Store { get; set; } = new Store();
 

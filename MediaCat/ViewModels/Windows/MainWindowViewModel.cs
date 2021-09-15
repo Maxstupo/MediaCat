@@ -13,14 +13,17 @@
         private readonly IFileFolderDialog fileFolderDialog;
         private readonly IWindowManager windowManager;
         private readonly StorageDialogViewModel storageDialogViewModel;
+        private readonly ImportDialogViewModel importDialogViewModel;
         private readonly Func<SearchTabViewModel> searchTabViewModelFactory;
 
         public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager,
             StorageDialogViewModel storageDialogViewModel,
+            ImportDialogViewModel importDialogViewModel,
             Func<SearchTabViewModel> searchTabViewModelFactory) : base(i18n) {
             this.fileFolderDialog = fileFolderDialog;
             this.windowManager = windowManager;
             this.storageDialogViewModel = storageDialogViewModel;
+            this.importDialogViewModel = importDialogViewModel;
             this.searchTabViewModelFactory = searchTabViewModelFactory;
         }
 
@@ -42,7 +45,9 @@
 
         public void ShowNewCatalogDialog() { }
         public void ShowOpenCatalogDialog() { }
-        public void ShowImportFilesDialog() { }
+        public void ShowImportFilesDialog() {
+            windowManager.ShowDialog(importDialogViewModel, this);
+        }
 
         public void ShowStorageLocationsDialog() {
             windowManager.ShowDialog(storageDialogViewModel, this);

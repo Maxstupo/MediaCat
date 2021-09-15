@@ -51,7 +51,7 @@
             "title": "@windows.main.title"
           }
         },
-       
+
       },
       "columns": {
         "status": "Status",
@@ -85,6 +85,47 @@
     "edit_store": {
       "title": "Edit Storage Location...",
       "confirm": "Edit"
+    },
+    "import": {
+      "title": "Import Files...",
+      "confirm": "Import",
+      "store_location": {
+        "$val": "Import into:",
+        "tooltip": "The store you want to import the files into."
+      },
+      "actions": {
+        "add_folder": {
+          "$val": "Add Folder",
+          "tooltip": "Add files from a folder to staging."
+        },
+        "add_file": {
+          "$val": "Add File",
+          "tooltip": "Add file to staging."
+        },
+        "remove": {
+          "$val": "Remove",
+          "tooltip": "Remove a file."
+        },
+        "tasks": {
+          "resume": {
+            "$val": "Resumve",
+            "tooltip": "Resume scanning."
+          },
+          "pause": {
+            "$val": "Pause",
+            "tooltip": "Pause scanning."
+          },
+          "stop": {
+            "$val": "Stop",
+            "tooltip": "Stop scanning."
+          }
+        }
+      },
+      "columns": {
+        "filepath": "Path",
+        "mime_type": "Type",
+        "filesize": "Size"
+      }
     }
   },
   "tabs": {

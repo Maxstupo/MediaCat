@@ -69,6 +69,7 @@
     <Compile Include="Utility\MappingViewManager.cs" />
     <Compile Include="Utility\NLogLogger.cs" />
     <Compile Include="ViewModels\Dialogs\AddStoreDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ImportDialogViewModel.cs" />
     <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="ViewModels\ICanRefreshData.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -77,6 +78,10 @@
     <Compile Include="ViewModels\Windows\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StorageDialogViewModel.cs" />
     <Page Include="Views\Dialogs\AddStoreDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ImportDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

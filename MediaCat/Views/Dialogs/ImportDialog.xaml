@@ -1,0 +1,88 @@
+﻿<Window x:Class="MediaCat.Views.Dialogs.ImportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCat.Views.Dialogs"
+        xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:vmd="clr-namespace:MediaCat.ViewModels.Dialogs"
+        xmlns:util="clr-namespace:MediaCat.Utility"
+        xmlns:c="clr-namespace:MediaCat.Converters"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vmd:ImportDialogViewModel, IsDesignTimeCreatable=True}"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding I18N[dialogs.import.title]}" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <DataGrid Grid.Row="0" Grid.ColumnSpan="2" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" HeadersVisibility="Column" IsReadOnly="True"
+                  ItemsSource="{Binding Items}">
+            <DataGrid.Resources>
+                <util:BindingProxy x:Key="proxy" Data="{Binding}"/>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.filepath], Source={StaticResource proxy}}" Width="*" Binding="{Binding Filepath}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.mime_type], Source={StaticResource proxy}}" Width="Auto" Binding="{Binding MimeType}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.filesize], Source={StaticResource proxy}}" Width="Auto" Binding="{Binding Filesize}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--action buttons-->
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 2 0 0">
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FilePlusOutline}" ToolTip="{Binding I18N[dialogs.import.actions.add_file.tooltip]}" Command="{s:Action AddFile}" />
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderPlusOutline}" ToolTip="{Binding I18N[dialogs.import.actions.add_folder.tooltip]}" Command="{s:Action AddFolder}" />
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=DeleteOutline}" ToolTip="{Binding I18N[dialogs.import.actions.remove.tooltip]}" Command="{s:Action RemoveFile}" />
+        </StackPanel>
+
+        <!--status & progress-->
+        <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Status}" Margin="4"/>
+        <ProgressBar Grid.Row="4" Height="22" Margin="4 0 0 0" IsIndeterminate="{Binding IsLoadingIndeterminate}" Minimum="0" Maximum="{Binding LoadingMax}" Value="{Binding LoadingValue}"/>
+
+        <!--pause/stop-->
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="2 0 4 0">
+            <Button Command="{s:Action ToggleLoading}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+                        <Setter Property="Content" Value="{iconPacks:Material Kind=PauseCircleOutline}"/>
+                        <Setter Property="ToolTip" Value="{Binding I18N[dialogs.import.actions.tasks.pause.tooltip]}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsLoadingPaused}" Value="True">
+                                <Setter Property="Content" Value="{iconPacks:Material Kind=PlayCircleOutline}"/>
+                                <Setter Property="ToolTip" Value="{Binding I18N[dialogs.import.actions.tasks.resume.tooltip]}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="{iconPacks:Material Kind=StopCircleOutline}" Style="{StaticResource IconButton}" ToolTip="{Binding I18N[dialogs.import.actions.tasks.stop.tooltip]}" Command="{s:Action StopLoading}"/>
+        </StackPanel>
+
+        <!--store-->
+        <TextBlock Grid.Row="6" Text="{Binding I18N[dialogs.import.store_location]}" Margin="5 0 5 0"/>
+        <ComboBox Grid.Row="7" Margin="5" Width="250" HorizontalAlignment="Left" ToolTip="{Binding I18N[dialogs.import.store_location.tooltip]}"/>
+
+        <!--dialog buttons-->
+        <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Margin="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Margin="0 0 4 0" Width="75" Content="{Binding I18N[dialogs.import.confirm]}" Command="{s:Action Import}"/>
+            <Button Margin="4 0 0 0" Width="75" Content="{Binding I18N[cancel]}" Command="{s:Action Cancel}"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
