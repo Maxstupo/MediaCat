@@ -25,7 +25,7 @@ Write-Host "################# Packaging Portable Edition #################"
 $portable_folder = "MediaCat-Portable_v$appversion"
 
 New-Item -Path $portable_folder -ItemType Directory
-Copy-Item "MediaCat/bin/$env:CONFIGURATION/*" $portable_folder -Force -Recurse -Verbose
+Copy-Item -Exclude '*.pdb', '*.sqlite3' "MediaCat/bin/$env:CONFIGURATION/*" $portable_folder -Force -Recurse -Verbose
 
 # Make the portable version
 7z a "$portable_folder.zip" "$portable_folder"
