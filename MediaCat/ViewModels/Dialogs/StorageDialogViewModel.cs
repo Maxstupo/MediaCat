@@ -13,21 +13,21 @@
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly IWindowManager windowManager;
-        private readonly IWarehouse catalog;
+        private readonly IWarehouse warehouse;
 
-        private readonly AddStoreDialogViewModel storeDialogViewModel;
+        private readonly AddStoreDialogViewModel addStoreDialogViewModel;
 
 
-        public StorageLocationViewModel SelectedItem { get; set; }
-        public BindableCollection<StorageLocationViewModel> Items { get; } = new BindableCollection<StorageLocationViewModel>();
+        public StoreItemViewModel SelectedItem { get; set; }
+        public BindableCollection<StoreItemViewModel> Items { get; } = new BindableCollection<StoreItemViewModel>();
 
         public bool IsRefreshingData { get; private set; }
 
 
-        public StorageDialogViewModel(II18N i18n, IWindowManager windowManager, IWarehouse catalog, AddStoreDialogViewModel storeDialogViewModel) : base(i18n) {
+        public StorageDialogViewModel(II18N i18n, IWindowManager windowManager, IWarehouse warehouse, AddStoreDialogViewModel addStoreDialogViewModel) : base(i18n) {
             this.windowManager = windowManager;
-            this.catalog = catalog;
-            this.storeDialogViewModel = storeDialogViewModel;
+            this.warehouse = warehouse;
+            this.addStoreDialogViewModel = addStoreDialogViewModel;
         }
 
         public StorageDialogViewModel() : base() {
@@ -44,8 +44,8 @@
                 await Task.Delay(250);
 #endif
 
-                List<Store> stores = await catalog.GetStoresAsync();
-                Items.AddRange(stores.Select(x => new StorageLocationViewModel(x)));
+                List<Store> stores = await warehouse.GetStoresAsync();
+                Items.AddRange(stores.Select(x => new StoreItemViewModel(x)));
             }
             IsRefreshingData = false;
 
@@ -54,16 +54,16 @@
 
         public bool CanAddStore => !IsRefreshingData;
         public void AddStore() {
-            if (windowManager.ShowDialog(storeDialogViewModel, this).GetValueOrDefault())
-                Items.Add(new StorageLocationViewModel(storeDialogViewModel.StorageLocation));
+            if (windowManager.ShowDialog(addStoreDialogViewModel, this).GetValueOrDefault())
+                Items.Add(new StoreItemViewModel(addStoreDialogViewModel.Store));
         }
 
         public bool CanEditStore => !IsRefreshingData && SelectedItem != null;
         public async Task EditStore() {
-            storeDialogViewModel.EditMode = true;
-            storeDialogViewModel.StorageLocation = SelectedItem.Storage;
+            addStoreDialogViewModel.EditMode = true;
+            addStoreDialogViewModel.Store = SelectedItem.Store;
 
-            if (windowManager.ShowDialog(storeDialogViewModel, this).GetValueOrDefault())
+            if (windowManager.ShowDialog(addStoreDialogViewModel, this).GetValueOrDefault())
                 await RefreshDataAsync();
         }
 
@@ -72,15 +72,22 @@
 
         public bool CanDeleteStore => !IsRefreshingData && SelectedItem != null;
         public async Task DeleteStore() {
-            if (SelectedItem.TotalFiles > 0) {
-                windowManager.ShowMessageBox(I18N["dialogs.storage.actions.remove.deletion_with_files"], I18N["dialogs.storage.actions.remove.deletion_with_files.title"], System.Windows.MessageBoxButton.OK,
+            if (SelectedItem.TotalFiles > 0 || SelectedItem.UsedSpace > 0) { // Notify user we cant delete store with files in it.
+                windowManager.ShowMessageBox(
+                    I18N["dialogs.storage.actions.remove.deletion_with_files"],
+                    I18N["dialogs.storage.actions.remove.deletion_with_files.title"],
+                    System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Exclamation);
 
             } else if (windowManager.ShowMessageBox(I18N["dialogs.storage.actions.remove.confirm_delete"], I18N["dialogs.storage.actions.remove.confirm_delete.title"], System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxResult.No) == System.Windows.MessageBoxResult.Yes) {
-                await catalog.DeleteStoreAsync(SelectedItem.Storage);
+
+                await warehouse.DeleteStoreAsync(SelectedItem.Store);
                 await RefreshDataAsync();
             }
         }
+
+        public bool CanMoveStore => false;
+        public void MoveStore() { }
 
     }
 

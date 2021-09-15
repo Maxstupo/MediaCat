@@ -21,6 +21,9 @@
         <Binding Converter="{StaticResource titleConverter}" Path="EditMode"/>
     </Window.Title>
     <Grid>
+        <Grid.Resources>
+            <c:BooleanInverterConverter x:Key="inverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -45,7 +48,7 @@
             <TextBox Margin="0 4" HorizontalAlignment="Stretch" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" Grid.ColumnSpan="3"  Header="{Binding I18N[dialogs.add_store.location]}" Margin="5 2.5 5 2.5">
+        <GroupBox Grid.Row="2" Grid.ColumnSpan="3"  Header="{Binding I18N[dialogs.add_store.location]}" Margin="5 2.5 5 2.5" IsEnabled="{Binding EditMode, Converter={StaticResource inverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>

@@ -69,7 +69,7 @@
     <Compile Include="Utility\MappingViewManager.cs" />
     <Compile Include="Utility\NLogLogger.cs" />
     <Compile Include="ViewModels\Dialogs\AddStoreDialogViewModel.cs" />
-    <Compile Include="ViewModels\StorageLocationViewModel.cs" />
+    <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="ViewModels\ICanRefreshData.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\Tabs\ITabPage.cs" />

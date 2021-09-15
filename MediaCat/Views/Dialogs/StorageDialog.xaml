@@ -53,6 +53,7 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderPlusOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.add.tooltip]}" Command="{s:Action AddStore}"/>
             <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderEditOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.edit.tooltip]}" Command="{s:Action EditStore}"/>
+            <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderMoveOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.merge.tooltip]}" Command="{s:Action MoveStore}"/>
             <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=CallMerge, RotationAngle=180}" ToolTip="{Binding I18N[dialogs.storage.actions.merge.tooltip]}" Command="{s:Action MergeStore}"/>
             <Button Style="{StaticResource IconButton}" Content="{iconPacks:Material Kind=FolderRemoveOutline}" ToolTip="{Binding I18N[dialogs.storage.actions.remove.tooltip]}" Command="{s:Action DeleteStore}"/>
         </StackPanel>

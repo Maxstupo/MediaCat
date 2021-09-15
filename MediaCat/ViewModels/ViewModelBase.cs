@@ -5,6 +5,9 @@
     using MediaCat.Services;
     using Stylet;
 
+    /// <summary>
+    /// A basic Stylet OneActive conductor. Includes I18N property (exposed to view) for translation and design-time support.
+    /// </summary>
     public abstract class ConductorOneActive<T> : Conductor<T>.Collection.OneActive where T : class {
 
         public II18N I18N { get; }
@@ -23,7 +26,7 @@
     }
 
     /// <summary>
-    /// The base view model used primarily by tab and dialog view models. Supports ICanRefreshData interface, will be called when the view is opened.
+    /// The base view model used primarily by tab and dialog view models. Supports ICanRefreshData interface, will be called when the view is opened. Includes I18N property (exposed to view) for translation and design-time support.
     /// </summary>
     public abstract class ViewModelBase : Screen {
         public static readonly string DesignerLocaleFilepath = "../Locales/default.en.json";

@@ -1,5 +1,6 @@
 ﻿namespace MediaCat.Core.Utility.Extensions {
     using System;
+    using System.Text.RegularExpressions;
 
     public static class StringExtensions {
 
@@ -23,6 +24,9 @@
             return char.ToUpper(str[0]) + str.Substring(1);
         }
 
+        public static string AsAlphaNumeric(this string src) {
+            return Regex.Replace(src, "[^a-zA-Z0-9_-]+", string.Empty, RegexOptions.Compiled);
+        }
 
     }
 

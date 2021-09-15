@@ -80,7 +80,7 @@
         /// <summary>
         /// Edit the specified store by updating the catalog and moving the store if needed.
         /// </summary>
-        Task<WarehouseResult> EditStoreAsync(Store storageLocation);
+        Task<WarehouseResult> EditStoreAsync(Store store);
 
         /// <summary>
         /// Delete an empty store.      
@@ -88,7 +88,7 @@
         /// <returns> 
         /// A catalog storage result containing the status of this operation.
         /// </returns>
-        Task<WarehouseResult> DeleteStoreAsync(Store storageLocation);
+        Task<WarehouseResult> DeleteStoreAsync(Store store);
 
         //Task<CatalogStorageResult> MergeStoreAsync(StorageLocation source, StorageLocation destination);
 
@@ -99,21 +99,21 @@
         /// <returns>A new list of all stores, or a new empty list if none exist.</returns>
         Task<List<Store>> GetStoresAsync();
 
-        Task<WarehouseResult> UpdateStoreStatisticsAsync(Store storageLocation);
+        Task<WarehouseResult> UpdateStoreStatisticsAsync(Store store);
 
         /// <summary>
         /// Validates the specified store by checking if the location, structure, and GUID match the specified store. 
         /// </summary>
-        void ValidateStore(Store storageLocation);
+        void ValidateStore(Store store);
 
         /// <summary>
         /// Returns the absolute filepath of the specified store. 
         /// Resolving relative paths based on the catalog filepath.
         /// </summary>
-        string ResolveStorePath(Store storageLocation);
+        string ResolveStorePath(Store store);
 
         /// <inheritdoc cref="ResolveStorePath(Store)"/>
-        string ResolveStorageLocationPath(string storageLocation);
+        string ResolveStorePath(string storePath);
 
     }
 

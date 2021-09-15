@@ -16,42 +16,46 @@
 
         private readonly IFileFolderDialog fileFolderDialog;
         private readonly IWindowManager windowManager;
-        private readonly IWarehouse catalog;
+        private readonly IWarehouse warehouse;
         private readonly IDatabase database;
         private readonly IFileSystem fileSystem;
 
-        public Store StorageLocation { get; set; } = new Store();
+        /// <summary>If edit mode is false, this is the result that can be accessed after the dialog is confirmed. Edit mode - this is the store this view model is editing.</summary>
+        public Store Store { get; set; } = new Store();
 
+        /// <summary>If true we are editing the Store property instead of creating one.</summary>
         public bool EditMode { get; set; } = false;
 
         private string label = string.Empty;
+
+        /// <summary>The cosmetic label of the store.</summary>
         public string Label {
             get => label;
             set {
-                if (string.IsNullOrWhiteSpace(Name) || Name == ToAlphaNumeric(Label))
+                if (string.IsNullOrWhiteSpace(Name) || Name == Label.AsAlphaNumeric())
                     Name = value;
                 label = value;
             }
         }
 
         private string name = string.Empty;
+        /// <summary>The name of the store (the name of the folder).</summary>
         public string Name {
             get => name;
-            set => name = ToAlphaNumeric(value);
+            set => name = value.AsAlphaNumeric();
         }
 
-        private string ToAlphaNumeric(string value) => Regex.Replace(value, "[^a-zA-Z0-9_-]+", string.Empty, RegexOptions.Compiled);
-
+        /// <summary>The directory location for the store folder.</summary>
         public string Location { get; set; } = string.Empty;
 
         public bool IsDefault { get; set; }
 
-        public string Path => fileSystem.Path.Combine(Location, Name);
+        private string Path => fileSystem.Path.Combine(Location, Name);
 
         public AddStoreDialogViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager, IWarehouse catalog, IDatabase database, IFileSystem fileSystem) : base(i18n) {
             this.fileFolderDialog = fileFolderDialog;
             this.windowManager = windowManager;
-            this.catalog = catalog;
+            this.warehouse = catalog;
             this.database = database;
             this.fileSystem = fileSystem;
         }
@@ -61,17 +65,17 @@
         }
 
         public override void OnOpen() {
-            if (EditMode) { // Edit mode, set properties to equal existing storage location.
-                if (StorageLocation == null)
-                    throw new System.Exception("StorageLocation is null! EditMode requires a StorageLocation!");
+            if (EditMode) { // Edit mode, set properties to equal existing store.
+                if (Store == null)
+                    throw new System.Exception("Store is null! EditMode requires a StorageLocation!");
 
-                Label = StorageLocation.Label;
-                Name = fileSystem.Path.GetFileName(StorageLocation.Path);
-                Location = fileSystem.Path.GetDirectoryName(StorageLocation.Path);
-                IsDefault = StorageLocation.IsDefault;
+                Label = Store.Label;
+                Name = fileSystem.Path.GetFileName(Store.Path);
+                Location = fileSystem.Path.GetDirectoryName(Store.Path);
+                IsDefault = Store.IsDefault;
 
             } else { // Clear properties
-                StorageLocation = null;
+                Store = null;
                 Label = Name = Location = string.Empty;
                 IsDefault = false;
 
@@ -97,40 +101,38 @@
         }
 
         private bool CheckPathExists() {
-            string storePath = catalog.ResolveStorageLocationPath(Path);
+            string storePath = warehouse.ResolveStorePath(Path);
             Logger.Trace("Path: {storePath}", storePath);
             return fileSystem.Directory.Exists(storePath);
         }
 
 
         public bool CanConfirm => !string.IsNullOrWhiteSpace(Label) && !string.IsNullOrWhiteSpace(Location) && !string.IsNullOrWhiteSpace(Name)
-            && (EditMode || !CheckPathExists());
+            && !CheckPathExists();
         public async Task Confirm() {
 
             if (EditMode) {
-                StorageLocation.Path = Path;
-                StorageLocation.Label = Label;
-                StorageLocation.IsDefault = IsDefault;
+                Store.Path = Path;
+                Store.Label = Label;
+                Store.IsDefault = IsDefault;
             }
 
             WarehouseResult result = !EditMode ?
-                await Task.Run(() => catalog.CreateStoreAsync(Label, Path, IsDefault)) :
-                await Task.Run(() => catalog.EditStoreAsync(StorageLocation));
+                await Task.Run(() => warehouse.CreateStoreAsync(Label, Path, IsDefault)) :
+                await Task.Run(() => warehouse.EditStoreAsync(Store));
 
             bool hasFailure = result.Status.HasFlag(WarehouseStoreStatus.Failure);
-
             if (hasFailure) {
                 Logger.Error($"Failed to {(EditMode ? "edit" : "create")} store: {{status}}", result.Status);
 
                 windowManager.ShowMessageBox(I18N.Get($"dialogs.{(EditMode ? "edit" : "add")}_store.failed", result.Status), I18N[$"dialogs.{(EditMode ? "edit" : "add")}_store.failed.title"], System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
 
             } else if (!EditMode) {
-                StorageLocation = result.Store;
+                Store = result.Store;
             }
 
             EditMode = false;
             RequestClose(!hasFailure);
-
         }
 
         public void Cancel() {

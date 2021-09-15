@@ -102,7 +102,7 @@
                 Logger.Error(e, "Failed to set GUID file attributes when creating a new store: {path} ({label}) {guid} -> {storePath}", store.Path, store.Label, store.Guid, storePath);
             }
 
-            return new WarehouseResult(WarehouseStoreStatus.Success);
+            return new WarehouseResult(store, WarehouseStoreStatus.Success);
         }
 
         /// <summary>
@@ -284,10 +284,10 @@
         }
 
         public string ResolveStorePath(Store store) {
-            return ResolveStorageLocationPath(store.Path);
+            return ResolveStorePath(store.Path);
         }
 
-        public string ResolveStorageLocationPath(string storePath) {
+        public string ResolveStorePath(string storePath) {
             bool isAbsolute = fileSystem.Path.IsFullPath(storePath);
 
             string path = storePath;
