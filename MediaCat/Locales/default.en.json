@@ -23,6 +23,13 @@
           "$val": "Catalog",
           "import_files": "Import Files...",
           "storage_locations": "Storage Locations..."
+        },
+        "settings": "Settings",
+        "help": {
+          "$val": "Help",
+          "wiki": "Wiki",
+          "check_for_updates": "Check for Updates",
+          "about": "About"
         }
       }
     }

@@ -7,6 +7,7 @@
     using Stylet;
 
     public sealed class MainWindowViewModel : ConductorOneActive<ITabPage>, IHandle<ImportEvent> {
+        private static readonly string WikiUrl = @"https://github.com/Maxstupo/MediaCat";
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -35,6 +36,10 @@
         protected override void OnInitialActivate() {
             NewSearchTab();
         }
+        
+        public void Handle(ImportEvent importEvent) {
+            // TODO: Add import tab
+        }
 
         public void NewSearchTab() {
             SearchTabViewModel vm = searchTabViewModelFactory();
@@ -57,10 +62,11 @@
             windowManager.ShowDialog(storageDialogViewModel, this);
         }
 
-        public void Handle(ImportEvent importEvent) {
-            // TODO: Add import tab
+        public void OpenWikiLink() {
+            Logger.Info("Opening link: {url}", WikiUrl);
+            System.Diagnostics.Process.Start(WikiUrl);
         }
-
+        
     }
 
 }

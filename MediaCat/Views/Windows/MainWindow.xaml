@@ -33,6 +33,13 @@
                 <Separator/>
                 <MenuItem Header="{Binding I18N[windows.main.menu.catalog.storage_locations]}" InputGestureText="Ctrl+L" Command="{s:Action ShowStorageLocationsDialog}"/>
             </MenuItem>
+            <MenuItem Header="{Binding I18N[windows.main.menu.settings]}" Command="{s:Action ShowSettingsDialog}" IsEnabled="False"/>
+            <MenuItem Header="{Binding I18N[windows.main.menu.help]}">
+                <MenuItem Header="{Binding I18N[windows.main.menu.help.wiki]}" Command="{s:Action OpenWikiLink}"/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.help.check_for_updates]}" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.help.about]}" Command="{s:Action ShowAboutDialog}" IsEnabled="False"/>
+            </MenuItem>            
         </Menu>
 
         <TabControl Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding ActiveItem}" DisplayMemberPath="DisplayName">
