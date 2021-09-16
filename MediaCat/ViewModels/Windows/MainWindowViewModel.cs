@@ -6,7 +6,7 @@
     using MediaCat.ViewModels.Tabs;
     using Stylet;
 
-    public sealed class MainWindowViewModel : ConductorOneActive<ITabPage> {
+    public sealed class MainWindowViewModel : ConductorOneActive<ITabPage>, IHandle<ImportEvent> {
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -16,7 +16,7 @@
         private readonly ImportDialogViewModel importDialogViewModel;
         private readonly Func<SearchTabViewModel> searchTabViewModelFactory;
 
-        public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager,
+        public MainWindowViewModel(II18N i18n, IFileFolderDialog fileFolderDialog, IWindowManager windowManager, IEventAggregator eventAggregator,
             StorageDialogViewModel storageDialogViewModel,
             ImportDialogViewModel importDialogViewModel,
             Func<SearchTabViewModel> searchTabViewModelFactory) : base(i18n) {
@@ -25,6 +25,8 @@
             this.storageDialogViewModel = storageDialogViewModel;
             this.importDialogViewModel = importDialogViewModel;
             this.searchTabViewModelFactory = searchTabViewModelFactory;
+
+            eventAggregator.Subscribe(this);
         }
 
         // Dummy designer ctor
@@ -44,13 +46,19 @@
         }
 
         public void ShowNewCatalogDialog() { }
+
         public void ShowOpenCatalogDialog() { }
+
         public void ShowImportFilesDialog() {
             windowManager.ShowDialog(importDialogViewModel, this);
         }
 
         public void ShowStorageLocationsDialog() {
             windowManager.ShowDialog(storageDialogViewModel, this);
+        }
+
+        public void Handle(ImportEvent importEvent) {
+            // TODO: Add import tab
         }
 
     }

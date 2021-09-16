@@ -70,6 +70,7 @@
     <Compile Include="Utility\NLogLogger.cs" />
     <Compile Include="ViewModels\Dialogs\AddStoreDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ImportDialogViewModel.cs" />
+    <Compile Include="ViewModels\ImportItemViewModel.cs" />
     <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="ViewModels\ICanRefreshData.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

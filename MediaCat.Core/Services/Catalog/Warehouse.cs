@@ -4,6 +4,7 @@
     using System.IO.Abstractions;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using MediaCat.Core.Model;
     using MediaCat.Core.Utility.Extensions;
@@ -29,7 +30,7 @@
         /// <param name="path">The folderpath of this store. Supports absolute, relative, and network paths.</param>
         /// <param name="isDefault">True if this new store should be the default selected.</param>
         /// <returns> 
-        /// A catalog storage result containing the newly created Store and the status of this operation.
+        /// A warehouse result containing the newly created Store and the status of this operation.
         /// <br/><br/>Possible status codes are: <br/>
         ///     - <see cref="WarehouseStoreStatus.FailureDatabaseClosed"/><br/>
         ///     - <see cref="WarehouseStoreStatus.FailureLabelAlreadyExists"/><br/>
@@ -109,7 +110,7 @@
         /// Delete an empty store.      
         /// </summary>
         ///  <returns> 
-        ///  A catalog storage result containing the status of this operation.
+        ///  A warehouse result containing the status of this operation.
         ///     <br/><br/>Possible status codes are: <br/>
         ///     - <see cref="WarehouseStoreStatus.FailureDatabaseClosed"/><br/>
         ///     - <see cref="WarehouseStoreStatus.FailureNotEmpty"/><br/>
@@ -163,7 +164,7 @@
         /// Edit the specified store by updating the catalog and moving the store if needed.
         /// </summary>
         /// <returns>
-        ///  A catalog storage result containing the status of this operation.
+        ///  A warehouse result containing the status of this operation.
         ///     <br/><br/>Possible status codes are: <br/>
         ///     - <see cref="WarehouseStoreStatus.FailureDatabaseClosed"/><br/>
         ///     - <see cref="WarehouseStoreStatus.FailureFolderNotExists"/><br/>
@@ -225,6 +226,39 @@
             return results;
         }
 
+        /// <summary>
+        /// Parses the given filepath to determine if it is suitable for importing. Returns an ImportItem if suitable.
+        /// </summary>
+        /// <returns>
+        ///  A warehouse result containing the status of this operation, and an ImportItem if success.
+        ///     <br/><br/>Possible status codes are: <br/>
+        ///     - <see cref="WarehouseStoreStatus.FailureDatabaseClosed"/><br/>
+        ///     - <see cref="WarehouseStoreStatus.FailureFileNotExists"/><br/>
+        ///     - <see cref="WarehouseStoreStatus.FailureMimeTypeUnknown"/><br/>
+        ///     - <see cref="WarehouseStoreStatus.Success"/>
+        /// </returns>
+        public async Task<WarehouseResult> ParseImportFileAsync(string filepath, CancellationToken ct) {
+            if (!database.IsOpen)
+                return new WarehouseResult(WarehouseStoreStatus.FailureDatabaseClosed);
+
+            if (!fileSystem.File.Exists(filepath))
+                return new WarehouseResult(WarehouseStoreStatus.FailureFileNotExists);
+
+            string extension = fileSystem.Path.GetExtension(filepath);
+
+            Mime mime = await database.Connection.Table<Mime>().FirstOrDefaultAsync(x => x.Extension == extension).ConfigureAwait(false);
+            if (mime == null)
+                return new WarehouseResult(WarehouseStoreStatus.FailureMimeTypeUnknown);
+
+            long filesize = fileSystem.FileInfo.FromFileName(filepath).Length;
+
+#if DEBUG
+            // TEMP: ParseImportFileAsync() - Delay=3
+            await Task.Delay(1, ct).ContinueWith(t => { }).ConfigureAwait(false);
+#endif
+
+            return new WarehouseResult(new ImportItem { Filepath = filepath, Filesize = filesize, Mime = mime }, WarehouseStoreStatus.Success);
+        }
 
         /// <summary>
         /// Validates the specified store by checking if the location, structure, and GUID match the specified store. 

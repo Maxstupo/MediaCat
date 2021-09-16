@@ -1,6 +1,7 @@
 ﻿namespace MediaCat.Core.Services.Catalog {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using MediaCat.Core.Model;
 
@@ -21,9 +22,11 @@
         Label = 1 << 6,
         Path = 1 << 7,
         Folder = 1 << 8,
-        Empty = 1 << 9,
-        Invalid = 1 << 10,
-        Mismatch = 1 << 11,
+        File = 1 << 9,
+        Empty = 1 << 10,
+        Invalid = 1 << 11,
+        Mismatch = 1 << 12,
+        MimeType = 1 << 13,
 
         /// <summary>The operation required the database to be open.</summary>
         FailureDatabaseClosed = Failure | DatabaseClosed,
@@ -48,18 +51,32 @@
 
         /// <summary>The operation couldn't proceed since the store doesn't match the requested store (GUID).</summary>
         FailureMismatch = Failure | Mismatch,
+
+        /// <summary>The operation couldn't proceed since the mime type wasn't known.</summary>
+        FailureMimeTypeUnknown = Failure | MimeType,
+
+        /// <summary>The operation couldn't proceed since the file doesn't exist.</summary>
+        FailureFileNotExists = Failure | File | Not | Exists
     }
 
     public sealed class WarehouseResult {
         public Store Store { get; }
+        public ImportItem ImportItem { get; }
+
         public WarehouseStoreStatus Status { get; }
 
-        public WarehouseResult(WarehouseStoreStatus status) : this(null, status) { }
+        public WarehouseResult(WarehouseStoreStatus status) : this(null, null, status) { }
 
-        public WarehouseResult(Store store, WarehouseStoreStatus status) {
+        public WarehouseResult(Store store, WarehouseStoreStatus status) : this(store, null, status) { }
+
+        public WarehouseResult(ImportItem importItem, WarehouseStoreStatus status) : this(null, importItem, status) { }
+
+        private WarehouseResult(Store store, ImportItem importItem, WarehouseStoreStatus status) {
             this.Store = store;
+            this.ImportItem = importItem;
             this.Status = status;
         }
+
     }
 
 
@@ -74,7 +91,7 @@
         /// <param name="label">The cosmetic label of this store.</param>
         /// <param name="path">The folderpath of this store. Supports absolute, relative, and network paths.</param>
         /// <param name="isDefault">True if this new store should be the default selected.</param>
-        /// <returns>A catalog storage result containing the newly created StorageLocation and the status of this operation.</returns>
+        /// <returns>A warehouse result containing the newly created StorageLocation and the status of this operation.</returns>
         Task<WarehouseResult> CreateStoreAsync(string label, string path, bool isDefault);
 
         /// <summary>
@@ -86,11 +103,11 @@
         /// Delete an empty store.      
         /// </summary>
         /// <returns> 
-        /// A catalog storage result containing the status of this operation.
+        /// A warehouse result containing the status of this operation.
         /// </returns>
         Task<WarehouseResult> DeleteStoreAsync(Store store);
 
-        //Task<CatalogStorageResult> MergeStoreAsync(StorageLocation source, StorageLocation destination);
+        //Task<WarehouseResult> MergeStoreAsync(StorageLocation source, StorageLocation destination);
 
 
         /// <summary>
@@ -100,6 +117,16 @@
         Task<List<Store>> GetStoresAsync();
 
         Task<WarehouseResult> UpdateStoreStatisticsAsync(Store store);
+
+        /// <summary>
+        /// Parses the given filepath to determine if it is suitable for importing. Returns an ImportItem if suitable.
+        /// </summary>
+        /// <returns>
+        /// A warehouse result containing the status of this operation and an ImportItem.
+        /// </returns>    
+        // TODO: Move ParseImportFileAsync() to another interface.
+        Task<WarehouseResult> ParseImportFileAsync(string filepath, CancellationToken ct);
+
 
         /// <summary>
         /// Validates the specified store by checking if the location, structure, and GUID match the specified store. 

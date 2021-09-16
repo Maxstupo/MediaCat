@@ -36,6 +36,7 @@
 
         public bool CanRefreshDataAsync => !IsRefreshingData;
         public async Task RefreshDataAsync() {
+            Logger.Debug("Refreshing data...");
             IsRefreshingData = true;
             {
                 Items.Clear();

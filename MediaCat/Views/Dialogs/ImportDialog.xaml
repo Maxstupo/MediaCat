@@ -32,15 +32,20 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid Grid.Row="0" Grid.ColumnSpan="2" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" HeadersVisibility="Column" IsReadOnly="True"
+        <DataGrid Grid.Row="0" Grid.ColumnSpan="2" 
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  CanUserResizeRows="False"
+                  HeadersVisibility="Column" 
+                  IsReadOnly="True"
                   ItemsSource="{Binding Items}">
             <DataGrid.Resources>
                 <util:BindingProxy x:Key="proxy" Data="{Binding}"/>
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.filepath], Source={StaticResource proxy}}" Width="*" Binding="{Binding Filepath}"/>
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.mime_type], Source={StaticResource proxy}}" Width="Auto" Binding="{Binding MimeType}"/>
-                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.filesize], Source={StaticResource proxy}}" Width="Auto" Binding="{Binding Filesize}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.mime_type], Source={StaticResource proxy}}"  Binding="{Binding MimeType}"/>
+                <DataGridTextColumn Header="{Binding Data.I18N[dialogs.import.columns.filesize], Source={StaticResource proxy}}"  Binding="{Binding Filesize}"/>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -76,7 +81,7 @@
 
         <!--store-->
         <TextBlock Grid.Row="6" Text="{Binding I18N[dialogs.import.store_location]}" Margin="5 0 5 0"/>
-        <ComboBox Grid.Row="7" Margin="5" Width="250" HorizontalAlignment="Left" ToolTip="{Binding I18N[dialogs.import.store_location.tooltip]}"/>
+        <ComboBox Grid.Row="7" Margin="5" Width="250" HorizontalAlignment="Left" ToolTip="{Binding I18N[dialogs.import.store_location.tooltip]}" ItemsSource="{Binding Stores}" SelectedItem="{Binding SelectedStore}" DisplayMemberPath="Label" IsEnabled="{Binding CanAddFile}"/>
 
         <!--dialog buttons-->
         <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Margin="8" Orientation="Horizontal" HorizontalAlignment="Right">

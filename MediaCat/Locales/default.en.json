@@ -96,10 +96,13 @@
       "actions": {
         "add_folder": {
           "$val": "Add Folder",
+          "title": "Select folders...",
           "tooltip": "Add files from a folder to staging."
         },
         "add_file": {
           "$val": "Add File",
+          "title": "Select files...",
+          "filter": "All Files (*.*)|*.*",
           "tooltip": "Add file to staging."
         },
         "remove": {
@@ -125,6 +128,16 @@
         "filepath": "Path",
         "mime_type": "Type",
         "filesize": "Size"
+      },
+      "status": {
+        "ready": "Ready to import...",
+        "parsing": "Parsing...",
+        "unsupported": "Unsupported file: {0}",
+        "parse_file": "Parsing file: {0}",
+        "waiting": "Waiting for files...",
+        "discovering": "Discovering Files...",
+        "discovered": "Discovered {0} file(s)",
+        "stopped": "Task stopped"
       }
     }
   },
