@@ -19,6 +19,7 @@
 
         private readonly StorageDialogViewModel storageDialogViewModel;
         private readonly ImportDialogViewModel importDialogViewModel;
+        private readonly Func<ImportTabViewModel> importTabViewModelFactory;
         private readonly Func<SearchTabViewModel> searchTabViewModelFactory;
 
         public new string DisplayName {
@@ -36,12 +37,14 @@
             IDatabase database,
             StorageDialogViewModel storageDialogViewModel,
             ImportDialogViewModel importDialogViewModel,
+            Func<ImportTabViewModel> importTabViewModelFactory,
             Func<SearchTabViewModel> searchTabViewModelFactory) : base(i18n) {
             this.fileFolderDialog = fileFolderDialog;
             this.windowManager = windowManager;
             this.database = database;
             this.storageDialogViewModel = storageDialogViewModel;
             this.importDialogViewModel = importDialogViewModel;
+            this.importTabViewModelFactory = importTabViewModelFactory;
             this.searchTabViewModelFactory = searchTabViewModelFactory;
 
             eventAggregator.Subscribe(this);
@@ -55,7 +58,12 @@
         }
 
         public void Handle(ImportEvent importEvent) {
-            // TODO: Add import tab
+            Logger.Debug("Creating import task tab...");
+
+            ImportTabViewModel vm = importTabViewModelFactory();
+            ActivateItem(vm);
+
+            vm.BeginImport(importEvent.Store, importEvent.Items);
         }
 
         public void NewSearchTab() {
@@ -161,6 +169,25 @@
             Logger.Info("Opening link: {url}", WikiUrl);
             System.Diagnostics.Process.Start(WikiUrl);
         }
+
+        #region Tab Control Actions
+
+        public void CloseTab(ITabPage tp) {
+            CloseItem(tp);
+        }
+
+        public void DuplicateTab(ITabPage tp) {
+            ITabPage clone = tp.Clone();
+            if (clone != null)
+                ActivateItem(clone);
+        }
+
+        public void RenameTab(ITabPage tp) {
+            // TODO: Implement rename tab
+        }
+
+        #endregion
+
 
     }
 

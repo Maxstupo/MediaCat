@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\File.cs" />
+    <Compile Include="Model\Record.cs" />
     <Compile Include="Model\ImportItem.cs" />
     <Compile Include="Model\Mime.cs" />
     <Compile Include="Model\Store.cs" />
@@ -64,8 +64,9 @@
     <Compile Include="Utility\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
     <Compile Include="Utility\MimeTypesMap.cs" />
-    <Compile Include="Utility\Extensions\PathExtensions.cs" />
+    <Compile Include="Utility\Extensions\FileSystemExtensions.cs" />
     <Compile Include="Utility\PauseTokenSource.cs" />
+    <Compile Include="Utility\Utility.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

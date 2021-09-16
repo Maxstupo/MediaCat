@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO.Abstractions;
     using System.Linq;
+    using System.Security.Cryptography;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -66,7 +67,10 @@
             if (fileSystem.Directory.Exists(storePath)) // Check if the folder exists.
                 return new WarehouseResult(WarehouseStoreStatus.FailureFolderAlreadyExists);
 
-            // TODO: Check if we have write access.
+            // Check if we have write access.
+            if (!fileSystem.IsDirectoryWritable(fileSystem.Directory.GetParent(storePath).FullName))
+                return new WarehouseResult(WarehouseStoreStatus.FailureFolderNotWritable);
+
 
             Logger.Info("Create store: {path} ({label}) {guid} -> {storePath}", store.Path, store.Label, store.Guid, storePath);
 
@@ -134,8 +138,13 @@
                 return result;
 
             string storePath = ResolveStorePath(store);
+           
+            // Check if we have write access.
+            if (!fileSystem.IsDirectoryWritable(fileSystem.Directory.GetParent(storePath).FullName))
+                return new WarehouseResult(WarehouseStoreStatus.FailureFolderNotWritable);
 
-            // TODO: Check if we have write access
+            if (!fileSystem.Directory.Exists(storePath)) // Check if the doesn't exist.
+                return new WarehouseResult(WarehouseStoreStatus.FailureFolderNotExists);
 
             Logger.Info("Delete store: {path} ({label}) {guid} -> {storePath}", store.Path, store.Label, store.Guid, storePath);
 
@@ -237,7 +246,7 @@
         ///     - <see cref="WarehouseStoreStatus.FailureMimeTypeUnknown"/><br/>
         ///     - <see cref="WarehouseStoreStatus.Success"/>
         /// </returns>
-        public async Task<WarehouseResult> ParseImportFileAsync(string filepath, CancellationToken ct) {
+        public async Task<WarehouseResult> ParseFileAsync(string filepath, CancellationToken ct) {
             if (!database.IsOpen)
                 return new WarehouseResult(WarehouseStoreStatus.FailureDatabaseClosed);
 
@@ -253,11 +262,61 @@
             long filesize = fileSystem.FileInfo.FromFileName(filepath).Length;
 
 #if DEBUG
-            // TEMP: ParseImportFileAsync() - Delay=3
             await Task.Delay(1, ct).ContinueWith(t => { }).ConfigureAwait(false);
 #endif
 
             return new WarehouseResult(new ImportItem { Filepath = filepath, Filesize = filesize, Mime = mime }, WarehouseStoreStatus.Success);
+        }
+
+        // TODO: Clean up
+        // TODO: Add checks
+        public async Task<WarehouseResult> ImportFileAsync(Store store, ImportItem item, CancellationToken ct) {
+            if (!database.IsOpen)
+                return new WarehouseResult(WarehouseStoreStatus.FailureDatabaseClosed);
+
+            if (!fileSystem.File.Exists(item.Filepath))
+                return new WarehouseResult(WarehouseStoreStatus.FailureFileNotExists);
+
+            ValidateStore(store);
+            WarehouseResult result = CheckStatus(store);
+            if (result != null)
+                return result;
+
+
+            string hash = fileSystem.GetHash<SHA256CryptoServiceProvider>(item.Filepath, ct: ct);
+            string extension = fileSystem.Path.GetExtension(item.Filepath);
+
+            Record record = new Record {
+                Storage = store,
+                Hash = hash,
+                Extension = extension,
+                Size = item.Filesize,
+                Mime = item.Mime,
+                ImportedOn = DateTime.Now
+            };
+
+            await database.Connection.InsertAsync(record);
+            string dstPath = ResolveRecordFilepath(record);
+
+            if (!fileSystem.File.Exists(dstPath)) {
+                Logger.Debug("{src} -> {dst}", item.Filesize, dstPath);
+                fileSystem.File.Copy(item.Filepath, dstPath);
+            }
+
+            store.TotalFiles++;
+            store.UsedSpace += item.Filesize;
+
+            await database.Connection.UpdateAsync(store);
+
+            return new WarehouseResult(record,WarehouseStoreStatus.Success);
+        }
+
+        public string ResolveRecordFilepath(Record record) {
+            string storePath = ResolveStorePath(record.Storage);
+
+            string partition = record.Hash.Substring(0, 2);
+
+            return fileSystem.Path.Combine(storePath, partition, record.Filename);
         }
 
         /// <summary>

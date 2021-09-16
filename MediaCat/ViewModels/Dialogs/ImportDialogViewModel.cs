@@ -98,7 +98,7 @@
         /// Parse the specified filepath and check if the warehouse accepts it as a suitable file. If so add it to the list.
         /// </summary>
         private async Task ParseFileAsync(string filepath, int loadingValue, CancellationToken ct) {
-            WarehouseResult result = await warehouse.ParseImportFileAsync(filepath, ct); // check if filepath is suitable for importing.
+            WarehouseResult result = await warehouse.ParseFileAsync(filepath, ct); // check if filepath is suitable for importing.
 
             await Execute.OnUIThreadAsync(() => {
                 Status = I18N.Get($"dialogs.import.status.parse_file", filepath);
@@ -136,10 +136,8 @@
                     for (int index = 0; index < filepaths.Length; index++) {
                         await pt.WaitWhilePausedAsync(ct); // async wait if paused.
 
-                        if (ct.IsCancellationRequested) {
-                            Logger.Trace("Add File: Cancellation Requested");
-                            break;
-                        }
+                        if (ct.IsCancellationRequested) 
+                            break;                        
 
                         await ParseFileAsync(filepaths[index], index, ct);
                     }

@@ -27,6 +27,7 @@
         Invalid = 1 << 11,
         Mismatch = 1 << 12,
         MimeType = 1 << 13,
+        Writable = 1 << 14,
 
         /// <summary>The operation required the database to be open.</summary>
         FailureDatabaseClosed = Failure | DatabaseClosed,
@@ -56,22 +57,32 @@
         FailureMimeTypeUnknown = Failure | MimeType,
 
         /// <summary>The operation couldn't proceed since the file doesn't exist.</summary>
-        FailureFileNotExists = Failure | File | Not | Exists
+        FailureFileNotExists = Failure | File | Not | Exists,
+
+        /// <summary>The operation couldn't proceed since the folder isn't writable.</summary>
+        FailureFolderNotWritable = Failure | Folder | Not | Writable
+
     }
 
     public sealed class WarehouseResult {
+
         public Store Store { get; }
+
         public ImportItem ImportItem { get; }
+
+        public Record File { get; }
 
         public WarehouseStoreStatus Status { get; }
 
-        public WarehouseResult(WarehouseStoreStatus status) : this(null, null, status) { }
+        public WarehouseResult(WarehouseStoreStatus status) : this(null, null, null, status) { }
 
-        public WarehouseResult(Store store, WarehouseStoreStatus status) : this(store, null, status) { }
+        public WarehouseResult(Store store, WarehouseStoreStatus status) : this(null, store, null, status) { }
+        public WarehouseResult(Record file, WarehouseStoreStatus status) : this(file, null, null, status) { }
 
-        public WarehouseResult(ImportItem importItem, WarehouseStoreStatus status) : this(null, importItem, status) { }
+        public WarehouseResult(ImportItem importItem, WarehouseStoreStatus status) : this(null, null, importItem, status) { }
 
-        private WarehouseResult(Store store, ImportItem importItem, WarehouseStoreStatus status) {
+        private WarehouseResult(Record file, Store store, ImportItem importItem, WarehouseStoreStatus status) {
+            this.File = file;
             this.Store = store;
             this.ImportItem = importItem;
             this.Status = status;
@@ -124,9 +135,9 @@
         /// <returns>
         /// A warehouse result containing the status of this operation and an ImportItem.
         /// </returns>    
-        // TODO: Move ParseImportFileAsync() to another interface.
-        Task<WarehouseResult> ParseImportFileAsync(string filepath, CancellationToken ct);
+        Task<WarehouseResult> ParseFileAsync(string filepath, CancellationToken ct);
 
+        Task<WarehouseResult> ImportFileAsync(Store store, ImportItem item, CancellationToken ct);
 
         /// <summary>
         /// Validates the specified store by checking if the location, structure, and GUID match the specified store. 

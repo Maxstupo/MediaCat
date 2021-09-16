@@ -82,7 +82,9 @@
 
             } else if (windowManager.ShowMessageBox(I18N["dialogs.storage.actions.remove.confirm_delete"], I18N["dialogs.storage.actions.remove.confirm_delete.title"], System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxResult.No) == System.Windows.MessageBoxResult.Yes) {
 
-                await warehouse.DeleteStoreAsync(SelectedItem.Store);
+            WarehouseResult result=    await warehouse.DeleteStoreAsync(SelectedItem.Store);
+                Logger.Debug(result.Status);
+                
                 await RefreshDataAsync();
             }
         }

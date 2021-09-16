@@ -4,7 +4,7 @@
     using SQLiteNetExtensions.Attributes;
 
     /// <summary></summary>
-    public sealed class File {
+    public sealed class Record {
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

@@ -1,8 +1,11 @@
 ﻿namespace MediaCat.ViewModels {
     using System;
     using MediaCat.Core.Model;
+    using Stylet;
 
-    public sealed class ImportItemViewModel {
+    public sealed class ImportItemViewModel : PropertyChangedBase {
+
+        public int Index { get; set; }
 
         public string Filepath => ImportItem.Filepath;
 

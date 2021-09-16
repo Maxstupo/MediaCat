@@ -6,11 +6,15 @@
         xmlns:local="clr-namespace:MediaCat.Views.Windows"
         xmlns:vmw="clr-namespace:MediaCat.ViewModels.Windows"
         xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:util="clr-namespace:MediaCat.Utility"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmw:MainWindowViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterScreen"
         Title="{Binding DisplayName}" Height="740" Width="1200">
     <Grid>
+        <Grid.Resources>
+            <util:BindingProxy x:Key="proxy_base" Data="{Binding}"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -50,6 +54,23 @@
                     <ContentControl s:View.Model="{Binding}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False"/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
+
+
+            <TabControl.Resources>
+                <util:BindingProxy x:Key="proxy_tab" Data="{Binding}"/>
+
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="{Binding Data.I18N[windows.main.tab_context_menu.close], Source={StaticResource proxy_base}}" IsEnabled="{Binding CanUserClose}" s:View.ActionTarget="{Binding Data, Source={StaticResource proxy_tab}}" Command="{s:Action CloseTab}" CommandParameter="{Binding}"/>
+                                <MenuItem Header="{Binding Data.I18N[windows.main.tab_context_menu.duplicate], Source={StaticResource proxy_base}}" IsEnabled="{Binding CanUserDuplicate}" s:View.ActionTarget="{Binding Data, Source={StaticResource proxy_tab}}" Command="{s:Action DuplicateTab}" CommandParameter="{Binding}"/>
+                                <MenuItem Header="{Binding Data.I18N[windows.main.tab_context_menu.rename], Source={StaticResource proxy_base}}" IsEnabled="{Binding CanUserRename}" s:View.ActionTarget="{Binding Data, Source={StaticResource proxy_tab}}" Command="{s:Action RenameTab}" CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
 
         </TabControl>
 

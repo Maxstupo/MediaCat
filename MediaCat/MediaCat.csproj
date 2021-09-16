@@ -73,6 +73,7 @@
     <Compile Include="ViewModels\ImportItemViewModel.cs" />
     <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="ViewModels\ICanRefreshData.cs" />
+    <Compile Include="ViewModels\Tabs\ImportTabViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\Tabs\ITabPage.cs" />
     <Compile Include="ViewModels\Tabs\SearchTabViewModel.cs" />
@@ -83,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ImportDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Tabs\ImportTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -36,7 +36,7 @@
             if (fileSystem.File.Exists(path))
                 return CatalogStatus.FailureHasCatalog;
 
-            Logger.Debug("Creating SQLite database...");
+            Logger.Debug("Creating SQLite database: {filepath}", path);
 
             SQLiteAsyncConnection connection = new SQLiteAsyncConnection(path, OpenFlags);
 
@@ -56,7 +56,7 @@
             if (!fileSystem.File.Exists(path))
                 return CatalogStatus.FailureNoCatalog;
 
-            Logger.Debug("Opening SQLite database...");
+            Logger.Debug("Opening SQLite database: {filepath}", path);
 
             Connection = new SQLiteAsyncConnection(path);
 
@@ -71,7 +71,7 @@
             if (!IsOpen)
                 return CatalogStatus.FailureClosed;
 
-            Logger.Debug("Closing SQLite database...");
+            Logger.Debug("Closing SQLite database: {filepath}", Filepath);
 
             await Connection.CloseAsync().ConfigureAwait(false);
 

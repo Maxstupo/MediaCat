@@ -28,7 +28,7 @@
             }
 
             await connection.CreateTableAsync<Store>().ConfigureAwait(false);
-            await connection.CreateTableAsync<File>().ConfigureAwait(false);
+            await connection.CreateTableAsync<Record>().ConfigureAwait(false);
 
         }
 

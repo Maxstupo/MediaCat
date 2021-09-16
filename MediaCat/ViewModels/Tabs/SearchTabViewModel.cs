@@ -20,7 +20,7 @@
 
 
         public ITabPage Clone() {
-            return new SearchTabViewModel();
+            return new SearchTabViewModel(I18N);
         }
 
     }

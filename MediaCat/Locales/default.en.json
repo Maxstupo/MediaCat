@@ -13,6 +13,11 @@
         "$val": "MediaCat{0}{1}",
         "separator": " - "
       },
+      "tab_context_menu": {
+        "close": "Close",
+        "rename": "Rename",
+        "duplicate": "Duplicate"
+      },
       "menu": {
         "file": {
           "$val": "File",
@@ -185,6 +190,10 @@
     "search": {
       "search": "Search",
       "selection_tags": "Selection Tags"
+    },
+    "import": {
+      "title": "Import Files ({1})",
+      "description": "Importing files can take a while depending on the hardware you are using."
     }
   }
 }
