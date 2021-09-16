@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vmw:MainWindowViewModel, IsDesignTimeCreatable=True}"
         WindowStartupLocation="CenterScreen"
-        Title="{Binding I18N[windows.main.title]}" Height="740" Width="1200">
+        Title="{Binding DisplayName}" Height="740" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,7 +23,9 @@
                 <MenuItem Header="{Binding I18N[windows.main.menu.file.new]}" InputGestureText="Ctrl+N" Command="{s:Action ShowNewCatalogDialog}"/>
                 <MenuItem Header="{Binding I18N[windows.main.menu.file.open]}" InputGestureText="Ctrl+O" Command="{s:Action ShowOpenCatalogDialog}"/>
                 <Separator/>
-                <MenuItem Header="{Binding I18N[windows.main.menu.file.exit]}" Command="{s:Action RequestClose}"/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.file.close]}" Command="{s:Action CloseCatalog}"/>
+                <Separator/>
+                <MenuItem Header="{Binding I18N[windows.main.menu.file.exit]}" InputGestureText="Alt+F4" Command="{s:Action RequestClose}"/>
             </MenuItem>
             <MenuItem Header="{Binding I18N[windows.main.menu.pages]}">
                 <MenuItem Header="{Binding I18N[windows.main.menu.pages.new_search_tab]}" InputGestureText="Ctrl+Q" Command="{s:Action NewSearchTab}"/>

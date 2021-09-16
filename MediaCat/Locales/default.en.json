@@ -1,4 +1,6 @@
 ﻿{
+  "title": "MediaCat",
+  "filter": "MediaCat Database (*.mcdb)|*.mcdb|All Files (*.*)|*.*",
   "yes": "Yes",
   "no": "No",
   "close": "Close",
@@ -7,12 +9,16 @@
   "browse": "Browse",
   "windows": {
     "main": {
-      "title": "MediaCat",
+      "title": {
+        "$val": "MediaCat{0}{1}",
+        "separator": " - "
+      },
       "menu": {
         "file": {
           "$val": "File",
           "new": "New Catalog...",
           "open": "Open Catalog...",
+          "close": "Close",
           "exit": "Exit"
         },
         "pages": {
@@ -51,13 +57,13 @@
           "tooltip": "Remove store",
           "confirm_delete": {
             "$val": "Are you sure you want to delete this storage location?",
-            "title": "@windows.main.title"
+            "title": "@title"
           },
           "deletion_with_files": {
             "$val": "The storage location must be empty! Unable to delete. Use merge to move files to another storage location.",
-            "title": "@windows.main.title"
+            "title": "@title"
           }
-        },
+        }
 
       },
       "columns": {
@@ -82,11 +88,11 @@
       },
       "can_be_relative": {
         "$val": "The selected location can be used as a relative path. Do you want to convert this location to a relative path?",
-        "title": "@windows.main.title"
+        "title": "@title"
       },
       "failed": {
         "$val": "Failed to create storage location. Error Status: {0}",
-        "title": "@windows.main.title"
+        "title": "@title"
       }
     },
     "edit_store": {
@@ -145,6 +151,33 @@
         "discovering": "Discovering Files...",
         "discovered": "Discovered {0} file(s)",
         "stopped": "Task stopped"
+      }
+    },
+    "new_catalog": {
+      "title": "New Catalog...",
+      "filter": "@filter",
+      "open_confirmation": {
+        "$val": "Successfully created catalog! Do you want to open the catalog now?",
+        "title": "@title"
+      },
+      "failed": "Failed to create catalog!\\n\\n{0}\\n\\nError Status: {1}"
+    },
+    "open_catalog": {
+      "title": "Open Catalog...",
+      "filter": "@filter",
+      "failed": {
+        "open": {
+          "$val": "Failed to open catalog!\\n\\n{0}\\n\\nError Status: {1}",
+          "title": "@title"
+        },
+        "close": {
+          "$val": "Failed to close the catalog file!\\n\\nError Status: {0}",
+          "title": "@title"
+        }
+      },
+      "success": {
+        "$val": "Succesfully opened the catalog file!",
+        "title": "@title"
       }
     }
   },
