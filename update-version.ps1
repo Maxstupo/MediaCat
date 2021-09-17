@@ -20,9 +20,15 @@ function Reset-BuildNumber() {
 
 
 $BUILD_NUMBER = $env:APPVEYOR_BUILD_NUMBER
+$BUILD_SUFFIX = ""
 
 if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
-    $env:BUILD_VERSION = $env:APPVEYOR_REPO_TAG_NAME.TrimStart('v')   
+
+    $found = $env:APPVEYOR_REPO_TAG_NAME -match 'v?(\d+\.\d+\.\d+)(?:\-(.+))?'
+    
+    $env:BUILD_VERSION = $matches[1]
+    $BUILD_SUFFIX = $matches[2]
+    
     Write-Host "Setting version using commit tag: v$env:BUILD_VERSION"    
     Write-Host "Resetting build number, since tag is defined!"
     $BUILD_NUMBER = "0"
@@ -49,13 +55,13 @@ if ($env:APPVEYOR_REPO_TAG -eq "true") {
     $env:APP_VERSION =  $env:BUILD_VERSION
 }
 
-$env:APP_VERSION_INFORMATIONAL = $env:APP_VERSION
+$env:APP_VERSION_INFORMATIONAL = "$env:APP_VERSION$BUILD_SUFFIX"
 
-Write-Host "Branch: $env:APPVEYOR_BUILD_BRANCH"
-if($env:APPVEYOR_BUILD_BRANCH -notlike 'ma*') {
-   $BRANCH = $env:APPVEYOR_BUILD_BRANCH -replace "/","-"
+Write-Host "Branch: $env:APPVEYOR_REPO_BRANCH"
+if($env:APPVEYOR_REPO_BRANCH  -notlike 'ma*') {
+   $BRANCH = $env:APPVEYOR_REPO_BRANCH -replace "/","-"
    
-   $env:APP_VERSION_INFORMATIONAL = "$env:APP_VERSION-$BRANCH"
+   $env:APP_VERSION_INFORMATIONAL = "$env:APP_VERSION_INFORMATIONAL-$BRANCH"
 }
 
 Update-AppveyorBuild -Version "$env:APP_VERSION_INFORMATIONAL"
