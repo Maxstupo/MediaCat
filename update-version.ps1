@@ -27,18 +27,25 @@ if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
     $found = $env:APPVEYOR_REPO_TAG_NAME -match 'v?(\d+\.\d+\.\d+)(?:\-(.+))?'
     
     $env:BUILD_VERSION = $matches[1]
-    $BUILD_SUFFIX = $matches[2]
+    $bs = $matches[2] 
+    $BUILD_SUFFIX = "-$bs"
     
-    Write-Host "Setting version using commit tag: v$env:BUILD_VERSION"    
+    Write-Host "Setting version using commit tag: v$env:BUILD_VERSION$BUILD_SUFFIX"    
     Write-Host "Resetting build number, since tag is defined!"
     $BUILD_NUMBER = "0"
     Reset-BuildNumber
 } else { # Use the last tag available
     $HASH = $(git rev-list --tags --max-count=1)
     
-    if ($HASH) {
-        $env:BUILD_VERSION = $(git describe --tags $HASH).TrimStart('v')
-        Write-Host "Setting version using latest existing tag: v$env:BUILD_VERSION"
+    if ($HASH) {      
+        $found = $(git describe --tags $HASH) -match 'v?(\d+\.\d+\.\d+)(?:\-(.+))?'
+    
+        $env:BUILD_VERSION = $matches[1]
+        
+        $bs = $matches[2]
+        $BUILD_SUFFIX = "-$bs"
+        
+        Write-Host "Setting version using latest existing tag: v$env:BUILD_VERSION$BUILD_SUFFIX"
     } else {
         $env:BUILD_VERSION = "0.0.0"
         Write-Host "Setting version to zero, no previous tags: v$env:BUILD_VERSION"
@@ -58,7 +65,7 @@ if ($env:APPVEYOR_REPO_TAG -eq "true") {
 $env:APP_VERSION_INFORMATIONAL = "$env:APP_VERSION$BUILD_SUFFIX"
 
 Write-Host "Branch: $env:APPVEYOR_REPO_BRANCH"
-if($env:APPVEYOR_REPO_BRANCH  -notlike 'ma*') {
+if($env:APPVEYOR_REPO_BRANCH  -notlike 'ma*' -and $env:APPVEYOR_REPO_TAG -ne "true") {
    $BRANCH = $env:APPVEYOR_REPO_BRANCH -replace "/","-"
    
    $env:APP_VERSION_INFORMATIONAL = "$env:APP_VERSION_INFORMATIONAL-$BRANCH"
