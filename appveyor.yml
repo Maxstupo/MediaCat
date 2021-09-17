@@ -5,11 +5,6 @@ environment:
   APPVEYOR_TOKEN:
     secure: EnZNz248FTxQXX+pCmZL7Ds5vFWwk8gkJASFBaQSos0=
 
-branches:
-  only:
-    - master
-    - /v\d+\.\d+\.\d+/
-
 skip_commits:
   files:
     - README.md
@@ -24,9 +19,9 @@ cache:
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+  assembly_version: $(APP_VERSION)
+  assembly_file_version: $(APP_VERSION)
+  assembly_informational_version: $(APP_VERSION_INFORMATIONAL)
 
 install:
 - ps: ./update-version.ps1

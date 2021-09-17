@@ -1,7 +1,8 @@
 param ($config='Release')
 
 $env:Path += ";C:\Program Files (x86)\Inno Setup 6;C:\Program Files\7-Zip"
-$appversion = $env:APPVEYOR_BUILD_VERSION
+
+$appversion = $env:APP_VERSION
 
 # Setup script if running outside of AppVeyor. Use 0.0.0.0 for version since msbuild doesn't update the version anyway
 if (!$env:APPVEYOR) {
@@ -15,10 +16,7 @@ if (!$env:APPVEYOR) {
     msbuild MediaCat.sln /P:Configuration=$config
 }
 
-# When building from tag, use only "major.minor.patch" else use "major.minor.patch.build"
-if ($env:APPVEYOR_REPO_TAG -eq "true") {
-    $appversion = $env:BUILD_VERSION
-}
+
 
 # Copy and archive all files needed for portable version 
 Write-Host "################# Packaging Portable Edition #################"   

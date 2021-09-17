@@ -17,6 +17,8 @@ function Reset-BuildNumber() {
         
 }
 
+
+
 $BUILD_NUMBER = $env:APPVEYOR_BUILD_NUMBER
 
 if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
@@ -37,6 +39,21 @@ if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
     }
 }
 
-Update-AppveyorBuild -Version "$env:BUILD_VERSION.$BUILD_NUMBER"
 
-$env:BUILD_VERSION = $env:BUILD_VERSION.split(".")[0..2] -join '.'
+# "major.minor.patch .build"
+$env:APP_VERSION = "$env:BUILD_VERSION.$BUILD_NUMBER"
+
+# When building from tag, use only "major.minor.patch" else use "major.minor.patch.build"
+if ($env:APPVEYOR_REPO_TAG -eq "true") {
+    $env:APP_VERSION =  $env:BUILD_VERSION
+}
+
+$env:APP_VERSION_INFORMATIONAL = $env:APP_VERSION
+
+if($env:APPVEYOR_BUILD_BRANCH -notlike 'ma*') {
+   $BRANCH = $env:APPVEYOR_BUILD_BRANCH -replace "/","-"
+   
+   $env:APP_VERSION_INFORMATIONAL = "$env:APP_VERSION-$BRANCH"
+}
+
+Update-AppveyorBuild -Version "$env:APP_VERSION_INFORMATIONAL"
