@@ -28,7 +28,9 @@ if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
     
     $env:BUILD_VERSION = $matches[1]
     $bs = $matches[2] 
-    $BUILD_SUFFIX = "-$bs"
+    if ($bs) {
+        $BUILD_SUFFIX = "-$bs"
+    }
     
     Write-Host "Setting version using commit tag: v$env:BUILD_VERSION$BUILD_SUFFIX"    
     Write-Host "Resetting build number, since tag is defined!"
@@ -43,8 +45,9 @@ if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
         $env:BUILD_VERSION = $matches[1]
         
         $bs = $matches[2]
-        $BUILD_SUFFIX = "-$bs"
-        
+        if ($bs) {
+            $BUILD_SUFFIX = "-$bs"
+        }
         Write-Host "Setting version using latest existing tag: v$env:BUILD_VERSION$BUILD_SUFFIX"
     } else {
         $env:BUILD_VERSION = "0.0.0"
