@@ -4,7 +4,10 @@ image: Visual Studio 2019
 environment:
   APPVEYOR_TOKEN:
     secure: EnZNz248FTxQXX+pCmZL7Ds5vFWwk8gkJASFBaQSos0=
-
+  TITLE: 'MediaCat'
+  PROJECT_NAME: 'MediaCat'
+  ISS: 'mediacat-installer.iss'
+  
 skip_commits:
   files:
     - README.md
@@ -30,7 +33,7 @@ before_build:
   - nuget restore
 
 build:
-  project: 'MediaCat.sln'
+  project: '$(PROJECT_NAME).sln'
   verbosity: minimal
 
 after_build:
@@ -39,13 +42,13 @@ after_build:
 test: off
 
 artifacts:
-  - path: 'MediaCat-Portable_v*.zip'
+  - path: '$(TITLE)-Portable_v*.zip'
     name: $(CONFIGURATION)-Portable
-  - path: 'MediaCat-Setup_v*.exe'
+  - path: '$(TITLE)-Setup_v*.exe'
     name: $(CONFIGURATION)-Setup
 
 deploy:
-  release: MediaCat v$(BUILD_VERSION)
+  release: '$(TITLE) v$(BUILD_VERSION)'
   tag: v$(BUILD_VERSION)
   provider: GitHub
   auth_token:
