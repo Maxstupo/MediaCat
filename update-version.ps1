@@ -22,7 +22,7 @@ function Reset-BuildNumber() {
 $BUILD_NUMBER = $env:APPVEYOR_BUILD_NUMBER
 
 if ($env:APPVEYOR_REPO_TAG -eq $true) { # Build has a tag
-    $env:BUILD_VERSION = $env:APPVEYOR_REPO_TAG_NAME.TrimStart('v')        
+    $env:BUILD_VERSION = $env:APPVEYOR_REPO_TAG_NAME.TrimStart('v')   
     Write-Host "Setting version using commit tag: v$env:BUILD_VERSION"    
     Write-Host "Resetting build number, since tag is defined!"
     $BUILD_NUMBER = "0"
@@ -45,11 +45,13 @@ $env:APP_VERSION = "$env:BUILD_VERSION.$BUILD_NUMBER"
 
 # When building from tag, use only "major.minor.patch" else use "major.minor.patch.build"
 if ($env:APPVEYOR_REPO_TAG -eq "true") {
+    Write-Host "Release build detected, removing build number from version."
     $env:APP_VERSION =  $env:BUILD_VERSION
 }
 
 $env:APP_VERSION_INFORMATIONAL = $env:APP_VERSION
 
+Write-Host "Branch: $env:APPVEYOR_BUILD_BRANCH"
 if($env:APPVEYOR_BUILD_BRANCH -notlike 'ma*') {
    $BRANCH = $env:APPVEYOR_BUILD_BRANCH -replace "/","-"
    
