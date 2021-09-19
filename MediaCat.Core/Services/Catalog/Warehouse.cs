@@ -138,7 +138,7 @@
                 return result;
 
             string storePath = ResolveStorePath(store);
-           
+
             // Check if we have write access.
             if (!fileSystem.IsDirectoryWritable(fileSystem.Directory.GetParent(storePath).FullName))
                 return new WarehouseResult(WarehouseStoreStatus.FailureFolderNotWritable);
@@ -208,7 +208,7 @@
                 // TODO: Move files with progress.
             }
 
-            await database.Connection.UpdateAsync(store).ConfigureAwait(false);
+            //     await database.Connection.UpdateAsync(store).ConfigureAwait(false);
             if (store.IsDefault)
                 await EnsureDefaultStoreAsync(store);
 
@@ -284,6 +284,10 @@
 
 
             string hash = fileSystem.GetHash<SHA256CryptoServiceProvider>(item.Filepath, ct: ct);
+            if (ct.IsCancellationRequested) 
+                return new WarehouseResult(WarehouseStoreStatus.Failure);
+            
+
             string extension = fileSystem.Path.GetExtension(item.Filepath);
 
             Record record = new Record {
@@ -296,10 +300,11 @@
             };
 
             await database.Connection.InsertAsync(record);
+
             string dstPath = ResolveRecordFilepath(record);
 
             if (!fileSystem.File.Exists(dstPath)) {
-                Logger.Debug("{src} -> {dst}", item.Filesize, dstPath);
+                Logger.Info("Copying: {src} -> {dst}", item.Filesize, dstPath);
                 fileSystem.File.Copy(item.Filepath, dstPath);
             }
 
@@ -308,22 +313,14 @@
 
             await database.Connection.UpdateAsync(store);
 
-            return new WarehouseResult(record,WarehouseStoreStatus.Success);
-        }
-
-        public string ResolveRecordFilepath(Record record) {
-            string storePath = ResolveStorePath(record.Storage);
-
-            string partition = record.Hash.Substring(0, 2);
-
-            return fileSystem.Path.Combine(storePath, partition, record.Filename);
+            return new WarehouseResult(record, WarehouseStoreStatus.Success);
         }
 
         /// <summary>
         /// Validates the specified store by checking if the location, structure, and GUID match the specified store. 
         /// Reads the GUID file and checks if all expected folders exist.
         /// </summary>
-        public void ValidateStore(Store store) {
+        private void ValidateStore(Store store) {
             string storePath = ResolveStorePath(store);
 
             if (!fileSystem.Directory.Exists(storePath)) { // The store directory doesn't exist.
@@ -348,6 +345,14 @@
 
             }
 
+        }
+
+        public string ResolveRecordFilepath(Record record) {
+            string storePath = ResolveStorePath(record.Storage);
+
+            string partition = record.Hash.Substring(0, 2);
+
+            return fileSystem.Path.Combine(storePath, partition, record.Filename);
         }
 
         /// <summary>

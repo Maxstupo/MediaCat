@@ -140,11 +140,6 @@
         Task<WarehouseResult> ImportFileAsync(Store store, ImportItem item, CancellationToken ct);
 
         /// <summary>
-        /// Validates the specified store by checking if the location, structure, and GUID match the specified store. 
-        /// </summary>
-        void ValidateStore(Store store);
-
-        /// <summary>
         /// Returns the absolute filepath of the specified store. 
         /// Resolving relative paths based on the catalog filepath.
         /// </summary>
@@ -152,7 +147,7 @@
 
         /// <inheritdoc cref="ResolveStorePath(Store)"/>
         string ResolveStorePath(string storePath);
-
+        string ResolveRecordFilepath(Record record);
     }
 
 }

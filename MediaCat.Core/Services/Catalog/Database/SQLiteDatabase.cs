@@ -34,7 +34,7 @@
 
         public async Task<CatalogStatus> CreateAsync(string path) {
             if (fileSystem.File.Exists(path))
-                return CatalogStatus.FailureHasCatalog;
+                return CatalogStatus.FailureFileExists;
 
             Logger.Debug("Creating SQLite database: {filepath}", path);
 
@@ -54,7 +54,7 @@
             path = fileSystem.Path.GetFullPath(path);
 
             if (!fileSystem.File.Exists(path))
-                return CatalogStatus.FailureNoCatalog;
+                return CatalogStatus.FailureFileNotExists;
 
             Logger.Debug("Opening SQLite database: {filepath}", path);
 

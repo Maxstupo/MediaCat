@@ -14,8 +14,8 @@
         Not = 32,
         Catalog = 64,
 
-        FailureHasCatalog = Failure | Has | Catalog,
-        FailureNoCatalog = Failure | Has | Not | Catalog,
+        FailureFileExists = Failure | Has | Catalog,
+        FailureFileNotExists = Failure | Has | Not | Catalog,
         FailureOpen = Failure | Open,
         FailureClosed = Failure | Closed,
 

@@ -3,10 +3,13 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading;
-    using System.Threading.Tasks;
 
     public static class Utility {
 
+        /// <summary>
+        /// Calculates the hash of this stream as a hexadecimal string.
+        /// </summary>
+        /// <param name="blockSize">The buffer size in megabytes before checking the cancellation token.</param>
         public static string GetHash<T>(this Stream stream, int blockSize = 8, CancellationToken ct = default) where T : HashAlgorithm, new() {
             using (T alogirthm = new T()) {
                 byte[] buffer = new byte[1024 * blockSize];
@@ -28,4 +31,5 @@
         }
 
     }
+
 }
