@@ -27,7 +27,7 @@ assembly_info:
   assembly_informational_version: $(APP_VERSION_INFORMATIONAL)
 
 install:
-- ps: ./update-version.ps1
+- ps: ./update-version-v2.ps1
 
 before_build:
   - nuget restore
@@ -37,7 +37,7 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: ./appveyor-build.ps1
+  - ps: ./package-build.ps1
 
 test: off
 
